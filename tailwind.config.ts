@@ -9,6 +9,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        'accent-1': '#009D5F',
+        'accent-2': '#40EA7B',
+      },
       fontFamily: {
         poppins: ['var(--poppins-font)', ...fontFamily.sans],
       },
