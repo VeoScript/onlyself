@@ -25,7 +25,9 @@ const queryClient = new QueryClient({
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   useEffect(() => {
-    AOS.init();
+    AOS.init({
+      once: true,
+    });
   }, []);
 
   return (
