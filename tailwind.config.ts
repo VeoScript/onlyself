@@ -12,6 +12,8 @@ const config: Config = {
       colors: {
         'accent-1': '#009D5F',
         'accent-2': '#40EA7B',
+        'accent-3': '#001C10',
+        'accent-4': '#A0E247',
       },
       fontFamily: {
         poppins: ['var(--poppins-font)', ...fontFamily.sans],

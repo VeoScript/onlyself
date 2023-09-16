@@ -38,7 +38,7 @@ const SignIn = (): JSX.Element => {
         <div className="mt-10 flex h-screen w-full flex-col items-center justify-start md:-mt-20 md:justify-center">
           <div className="flex w-full max-w-md flex-col gap-y-5">
             <div className="flex w-full flex-col items-start gap-y-1">
-              <h1 className="text-accent-2 ml-2 text-xl font-bold">Sign In</h1>
+              <h1 className="ml-2 text-xl font-bold text-accent-2">Sign In</h1>
             </div>
             <form onSubmit={handleSignIn} className="flex w-full flex-col items-center gap-y-3">
               <div
@@ -46,11 +46,11 @@ const SignIn = (): JSX.Element => {
                 data-aos="fade-up"
                 data-aos-delay="200"
               >
-                <label className="ml-2 text-xs text-neutral-600" htmlFor="email">
+                <label className="ml-2 text-xs text-accent-1" htmlFor="email">
                   Email
                 </label>
                 <input
-                  className="focus:border-accent-2 w-full rounded-xl border border-neutral-300 p-3 text-sm text-neutral-600 outline-none"
+                  className="border-accent-3 w-full rounded-xl border bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
                   type="text"
                   id="email"
                   value={email}
@@ -68,11 +68,11 @@ const SignIn = (): JSX.Element => {
                 data-aos="fade-up"
                 data-aos-delay="400"
               >
-                <label className="ml-2 text-xs text-neutral-600" htmlFor="password">
+                <label className="ml-2 text-xs text-accent-1" htmlFor="password">
                   Password
                 </label>
                 <input
-                  className="focus:border-accent-2 w-full rounded-xl border border-neutral-300 p-3 text-sm text-neutral-600 outline-none"
+                  className="border-accent-3 w-full rounded-xl border bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
                   type="password"
                   id="password"
                   value={password}
@@ -90,15 +90,15 @@ const SignIn = (): JSX.Element => {
                 data-aos="fade-up"
                 data-aos-delay="600"
               >
-                <div className="flex w-full flex-row items-center justify-center gap-x-1 text-xs font-light text-neutral-600 md:justify-start">
+                <div className="flex w-full flex-row items-center justify-center gap-x-1 text-xs font-light text-accent-1 md:justify-start">
                   <span>Don&apos;t have an account?</span>
-                  <Link href="/signup" className="text-accent-1 font-bold hover:underline">
+                  <Link href="/signup" className="font-bold text-accent-2 hover:underline">
                     Sign Up
                   </Link>
                 </div>
                 <button
                   type="submit"
-                  className="bg-accent-2 w-full rounded-xl p-3 text-center text-xs text-green-700 outline-none hover:bg-opacity-50 md:w-auto md:px-5"
+                  className="w-full rounded-xl bg-accent-2 p-3 text-center text-xs text-accent-3 outline-none hover:bg-opacity-50 md:w-auto md:px-5"
                 >
                   Continue
                 </button>

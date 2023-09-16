@@ -53,11 +53,11 @@ const SignUp = (): JSX.Element => {
                 data-aos="fade-up"
                 data-aos-delay="200"
               >
-                <label className="ml-2 text-xs text-neutral-600" htmlFor="name">
+                <label className="ml-2 text-xs text-accent-1" htmlFor="name">
                   Full name
                 </label>
                 <input
-                  className="focus:border-accent-2 w-full rounded-xl border border-neutral-300 p-3 text-sm text-neutral-600 outline-none"
+                  className="border-accent-3 w-full rounded-xl border bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
                   type="text"
                   id="name"
                   value={name}
@@ -75,11 +75,11 @@ const SignUp = (): JSX.Element => {
                 data-aos="fade-up"
                 data-aos-delay="400"
               >
-                <label className="ml-2 text-xs text-neutral-600" htmlFor="email">
+                <label className="ml-2 text-xs text-accent-1" htmlFor="email">
                   Email
                 </label>
                 <input
-                  className="focus:border-accent-2 w-full rounded-xl border border-neutral-300 p-3 text-sm text-neutral-600 outline-none"
+                  className="border-accent-3 w-full rounded-xl border bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
                   type="text"
                   id="email"
                   value={email}
@@ -97,11 +97,11 @@ const SignUp = (): JSX.Element => {
                 data-aos="fade-up"
                 data-aos-delay="600"
               >
-                <label className="ml-2 text-xs text-neutral-600" htmlFor="password">
+                <label className="ml-2 text-xs text-accent-1" htmlFor="password">
                   Password
                 </label>
                 <input
-                  className="focus:border-accent-2 w-full rounded-xl border border-neutral-300 p-3 text-sm text-neutral-600 outline-none"
+                  className="border-accent-3 w-full rounded-xl border bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
                   type="password"
                   id="password"
                   value={password}
@@ -119,11 +119,11 @@ const SignUp = (): JSX.Element => {
                 data-aos="fade-up"
                 data-aos-delay="800"
               >
-                <label className="ml-2 text-xs text-neutral-600" htmlFor="repassword">
+                <label className="ml-2 text-xs text-accent-1" htmlFor="repassword">
                   Re-enter password
                 </label>
                 <input
-                  className="focus:border-accent-2 w-full rounded-xl border border-neutral-300 p-3 text-sm text-neutral-600 outline-none"
+                  className="border-accent-3 w-full rounded-xl border bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
                   type="password"
                   id="repassword"
                   value={repassword}
@@ -141,15 +141,15 @@ const SignUp = (): JSX.Element => {
                 data-aos="fade-up"
                 data-aos-delay="1000"
               >
-                <div className="flex w-full flex-row items-center justify-center gap-x-1 text-xs font-light text-neutral-600 md:justify-start">
+                <div className="flex w-full flex-row items-center justify-center gap-x-1 text-xs font-light text-accent-1 md:justify-start">
                   <span>Already have an account?</span>
-                  <Link href="/signin" className="text-accent-1 font-bold hover:underline">
+                  <Link href="/signin" className="text-accent-2 font-bold hover:underline">
                     Sign In
                   </Link>
                 </div>
                 <button
                   type="submit"
-                  className="bg-accent-2 w-full rounded-xl p-3 text-center text-xs text-green-700 outline-none hover:bg-opacity-50 md:w-auto md:px-5"
+                  className="w-full rounded-xl bg-accent-2 p-3 text-center text-xs text-accent-3 outline-none hover:bg-opacity-50 md:w-auto md:px-5"
                 >
                   Continue
                 </button>

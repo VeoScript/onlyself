@@ -6,6 +6,7 @@ import '~/styles/tailwind.css';
 import 'aos/dist/aos.css';
 
 import AOS from 'aos';
+import { Tooltip } from 'react-tooltip';
 import { Poppins } from 'next/font/google';
 
 const poppins = Poppins({
@@ -41,6 +42,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       </style>
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
+        <Tooltip id="onlyself-tooltip" />
       </QueryClientProvider>
     </>
   );
