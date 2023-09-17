@@ -6,7 +6,7 @@ const nextConfig = {
   },
   images: {
     dangerouslyAllowSVG: true,
-    domains: ["i.ibb.co"],
+    domains: ['i.ibb.co', 'pbs.twimg.com'],
   },
 };
 

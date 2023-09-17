@@ -1,15 +1,29 @@
-import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import BottomBar from '~/components/organisms/BottomBar';
 import { LogoProfile } from '~/components/atoms/Logo';
-
-import { useRouter } from 'next/router';
+import BottomBar from '~/components/organisms/BottomBar';
 import MessageInputText from '~/components/molecules/MessageInputText';
 import SocialMediaHolder from '~/components/molecules/SocialMediaHolder';
+import DiscoverModal from '~/components/molecules/Modals/DiscoverModal';
+import MessagesModal from '~/components/molecules/Modals/MessagesModal';
+import FilesModal from '~/components/molecules/Modals/FilesModal';
+import SettingsModal from '~/components/molecules/Modals/SettingsModal';
+
+import { useRouter } from 'next/router';
+import {
+  discoverModalStore,
+  messageModalStore,
+  filesModalStore,
+  settingsModalStore,
+} from '~/helpers/stores/modals';
 
 const Profile = (): JSX.Element => {
   const router = useRouter();
+
+  const { isOpen: isOpenDiscoverModal, setIsOpen: setIsOpenDiscoverModal } = discoverModalStore();
+  const { isOpen: isOpenMessagesModal, setIsOpen: setIsOpenMessagesModal } = messageModalStore();
+  const { isOpen: isOpenFilesModal, setIsOpen: setIsOpenFilesModal } = filesModalStore();
+  const { isOpen: isOpenSettingsModal, setIsOpen: setIsOpenSettingsModal } = settingsModalStore();
 
   return (
     <>
@@ -23,13 +37,20 @@ const Profile = (): JSX.Element => {
             <button
               data-tooltip-id="onlyself-tooltip"
               data-tooltip-content="Back"
-              className="rounded-full bg-white bg-opacity-50 p-2 outline-none backdrop-blur-sm hover:opacity-50"
+              className="rounded-full bg-white bg-opacity-20 p-2 outline-none backdrop-blur-sm hover:opacity-50"
               type="button"
-              onClick={() => router.back()}
+              onClick={() => {
+                if (isOpenDiscoverModal) return setIsOpenDiscoverModal(false);
+                if (isOpenMessagesModal) return setIsOpenMessagesModal(false);
+                if (isOpenFilesModal) return setIsOpenFilesModal(false);
+                if (isOpenSettingsModal) return setIsOpenSettingsModal(false);
+
+                router.back();
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-3 w-3 md:h-5 md:w-5"
+                className="h-3 w-3 text-white md:h-5 md:w-5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -46,7 +67,7 @@ const Profile = (): JSX.Element => {
           <div className="absolute inset-0 h-full w-full bg-black bg-opacity-10 backdrop-blur-sm" />
           <Image
             priority
-            src="/images/cover_sample.png"
+            src="https://pbs.twimg.com/media/F2gwtNLWQAAwJ-O?format=jpg&name=medium"
             className="h-full w-full bg-neutral-800 object-cover"
             alt="cover_image"
             width={1000}
@@ -58,14 +79,21 @@ const Profile = (): JSX.Element => {
               priority
               src="/images/profile_sample.jpg"
               className="h-[7rem] w-[7rem] rounded-b-3xl bg-black object-cover md:h-[13rem] md:w-[15rem]"
-              alt="cover_image"
+              alt="profile_image"
               width={1000}
               height={1000}
               quality={100}
+              data-aos="fade-down"
+              data-aos-delay="400"
             />
             <div className="flex w-full max-w-xl flex-col items-center gap-y-5 px-3">
-              <div className="flex w-full max-w-xl flex-col items-center gap-y-2">
-                <h1 className="text-xl font-bold text-white">@jeromevillaruel</h1>
+              <div
+                className="flex w-full max-w-xl flex-col items-center gap-y-2"
+                data-aos="fade-down"
+                data-aos-delay="200"
+              >
+                <h1 className="text-xl font-bold text-white">Jerome Villaruel</h1>
+                <h1 className="text-base font-medium text-white">@jeromevillaruel</h1>
                 <SocialMediaHolder />
                 <h2 className="text-center text-sm font-light text-white">
                   Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fuga dolore unde ducimus
@@ -79,6 +107,10 @@ const Profile = (): JSX.Element => {
           <BottomBar />
         </div>
       </div>
+      <DiscoverModal />
+      <MessagesModal />
+      <FilesModal />
+      <SettingsModal />
     </>
   );
 };

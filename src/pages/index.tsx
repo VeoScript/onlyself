@@ -2,8 +2,13 @@ import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import MainLayout from '~/components/templates/MainLayout';
+import DiscoverModal from '~/components/molecules/Modals/DiscoverModal';
+
+import { discoverModalStore } from '~/helpers/stores/modals';
 
 const Home = (): JSX.Element => {
+  const { setIsOpen: setIsOpenDiscoverModal } = discoverModalStore();
+
   return (
     <>
       <Head>
@@ -24,8 +29,7 @@ const Home = (): JSX.Element => {
               data-aos="zoom-in"
               data-aos-delay="400"
             >
-              Empower Your Online Presence with <span className="text-accent-1">Only</span>
-              <span className="text-accent-4">self</span>.
+              Empower Your Online Presence with <span className="text-accent-4">Onlyself</span>.
             </h1>
           </div>
           <div
@@ -33,21 +37,23 @@ const Home = (): JSX.Element => {
             data-aos="fade-up"
             data-aos-delay="600"
           >
-            <Link
-              href="/"
+            <button
+              type="button"
               className="w-[6rem] rounded-xl bg-accent-1 px-3 py-3 text-center text-sm text-white hover:bg-opacity-50 md:w-[10rem] md:px-5"
+              onClick={() => setIsOpenDiscoverModal(true)}
             >
               Discover
-            </Link>
+            </button>
             <Link
               href="/signin"
-              className="text-accent-3 w-[6rem] rounded-xl bg-accent-2 px-3 py-3 text-center text-sm hover:bg-opacity-50 md:w-[10rem] md:px-5"
+              className="w-[6rem] rounded-xl bg-accent-2 px-3 py-3 text-center text-sm text-accent-3 hover:bg-opacity-50 md:w-[10rem] md:px-5"
             >
               Sign in
             </Link>
           </div>
         </div>
       </MainLayout>
+      <DiscoverModal />
     </>
   );
 };

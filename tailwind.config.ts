@@ -12,7 +12,7 @@ const config: Config = {
       colors: {
         'accent-1': '#009D5F',
         'accent-2': '#40EA7B',
-        'accent-3': '#001C10',
+        'accent-3': '#00150D',
         'accent-4': '#A0E247',
       },
       fontFamily: {
@@ -20,7 +20,9 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar')({ nocompatible: true }),
+  ],
 };
 
 export default config;
