@@ -6,7 +6,11 @@ const MessageInputText = () => {
   const [isAnonymous, setIsAnonymous] = useState<boolean>(true);
 
   return (
-    <div className="flex w-full flex-col items-center overflow-hidden rounded-xl">
+    <div
+      className="flex w-full flex-col items-center overflow-hidden rounded-xl"
+      data-aos="fade-up"
+      data-aos-delay="600"
+    >
       <div className="flex w-full flex-row items-center justify-between bg-white bg-opacity-20 p-3 backdrop-blur-sm">
         <h1 className="text-xs text-white">Send me a message! 🤗</h1>
         <div className="flex items-center gap-x-2">
@@ -99,7 +103,7 @@ const MessageInputText = () => {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="h-6 w-6 text-white"
+            className="h-6 w-6 text-white hover:opacity-50"
           >
             <line x1="22" y1="2" x2="11" y2="13" />
             <polygon points="22 2 15 22 11 13 2 9 22 2" />
