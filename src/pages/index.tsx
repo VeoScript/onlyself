@@ -5,9 +5,14 @@ import MainLayout from '~/components/templates/MainLayout';
 import DiscoverModal from '~/components/molecules/Modals/DiscoverModal';
 
 import { discoverModalStore } from '~/helpers/stores/modals';
+import { useGetUser } from '~/helpers/tanstack/queries/user';
 
 const Home = (): JSX.Element => {
   const { setIsOpen: setIsOpenDiscoverModal } = discoverModalStore();
+
+  const {data: user, isLoading: isLoadingUser} = useGetUser();
+
+  console.log("user", user)
 
   return (
     <>
