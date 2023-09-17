@@ -22,7 +22,7 @@ const MessagesModal = () => {
       <div className="absolute h-full w-full flex-1 cursor-default bg-transparent outline-none" />
       <div className="z-20 flex h-full w-full max-w-xl flex-col items-center overflow-hidden rounded-xl bg-white bg-opacity-20 font-poppins text-white backdrop-blur-sm">
         <div className="flex w-full flex-col items-start justify-center gap-y-2 p-3">
-          <label className="ml-3 text-base font-bold" htmlFor="search">
+          <label className="ml-3 text-base font-bold" htmlFor="search_messages">
             Messages
           </label>
           <div className="flex w-full flex-row items-center gap-x-2 rounded-full bg-black bg-opacity-60 px-3 py-2 text-sm text-white backdrop-blur-sm">
@@ -44,7 +44,7 @@ const MessagesModal = () => {
               className="w-full bg-transparent outline-none"
               autoComplete="off"
               type="text"
-              id="search"
+              id="search_messages"
               placeholder="Search message by sender"
               value={search}
               onChange={(e) => setSearch(e.currentTarget.value)}

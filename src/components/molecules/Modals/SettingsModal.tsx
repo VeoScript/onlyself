@@ -186,6 +186,90 @@ const SettingsModal = () => {
               </Switch>
             </div>
           </div>
+          {/* SOCIAL MEDIA LINK */}
+          <div className="flex w-full flex-col items-start gap-y-3 px-3 pb-3">
+            <div className="flex w-full flex-col items-start justify-center gap-y-2 py-3">
+              <h1 className="text-base font-bold">Social Links</h1>
+            </div>
+            <div className="flex w-full flex-col items-start gap-y-1">
+              <label className="ml-1 text-xs font-light" htmlFor="facebook">
+                Facebook
+              </label>
+              <input
+                className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                type="text"
+                id="facebook"
+                value=""
+                onChange={(e) => console.log(e.currentTarget.value)}
+              />
+            </div>
+            <div className="flex w-full flex-col items-start gap-y-1">
+              <label className="ml-1 text-xs font-light" htmlFor="instagram">
+                Instagram
+              </label>
+              <input
+                className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                type="text"
+                id="instagram"
+                value=""
+                onChange={(e) => console.log(e.currentTarget.value)}
+              />
+            </div>
+            <div className="flex w-full flex-col items-start gap-y-1">
+              <label className="ml-1 text-xs font-light" htmlFor="twitterx">
+                Twitter/X
+              </label>
+              <input
+                className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                type="text"
+                id="twitterx"
+                value=""
+                onChange={(e) => console.log(e.currentTarget.value)}
+              />
+            </div>
+            <div className="flex w-full flex-col items-start gap-y-1">
+              <label className="ml-1 text-xs font-light" htmlFor="linkedin">
+                LinkedIn
+              </label>
+              <input
+                className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                type="text"
+                id="linkedin"
+                value=""
+                onChange={(e) => console.log(e.currentTarget.value)}
+              />
+            </div>
+            <div className="flex w-full flex-col items-start gap-y-1">
+              <label className="ml-1 text-xs font-light" htmlFor="github">
+                Github
+              </label>
+              <input
+                className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                type="text"
+                id="github"
+                value=""
+                onChange={(e) => console.log(e.currentTarget.value)}
+              />
+            </div>
+            <div className="flex w-full flex-col items-start gap-y-1">
+              <label className="ml-1 text-xs font-light" htmlFor="website">
+                Website
+              </label>
+              <input
+                className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                type="text"
+                id="website"
+                value=""
+                onChange={(e) => console.log(e.currentTarget.value)}
+              />
+            </div>
+            <button
+              className="w-full rounded-lg bg-black p-2.5 text-sm font-light text-white outline-none transition duration-200 hover:bg-opacity-50"
+              type="button"
+            >
+              Save
+            </button>
+          </div>
           {/* CHANGE PASSWORD */}
           <div className="flex w-full flex-col items-start gap-y-3 px-3 pb-3">
             <div className="flex w-full flex-col items-start justify-center gap-y-2 py-3">

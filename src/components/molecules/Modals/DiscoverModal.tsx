@@ -28,7 +28,7 @@ const DiscoverModal = () => {
         <div className="flex w-full flex-row items-start justify-between">
           <div className="flex w-full flex-col items-start justify-center gap-y-2 p-3">
             <div className="flex w-full flex-row items-center justify-between">
-              <label className="ml-3 text-base font-bold" htmlFor="search">
+              <label className="ml-3 text-base font-bold" htmlFor="search_people">
                 Discover
               </label>
               {router.pathname === '/' && (
@@ -77,7 +77,7 @@ const DiscoverModal = () => {
                 className="w-full bg-transparent outline-none"
                 autoComplete="off"
                 type="text"
-                id="search"
+                id="search_people"
                 placeholder='Search people by name'
                 value={search}
                 onChange={(e) => setSearch(e.currentTarget.value)}
