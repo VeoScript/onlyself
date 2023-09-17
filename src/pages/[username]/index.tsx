@@ -9,6 +9,8 @@ import MessagesModal from '~/components/molecules/Modals/MessagesModal';
 import FilesModal from '~/components/molecules/Modals/FilesModal';
 import SettingsModal from '~/components/molecules/Modals/SettingsModal';
 
+import nookies from 'nookies';
+import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import {
   discoverModalStore,
@@ -16,14 +18,29 @@ import {
   filesModalStore,
   settingsModalStore,
 } from '~/helpers/stores/modals';
+import { useGetProfile } from '~/helpers/tanstack/queries/profile';
 
 const Profile = (): JSX.Element => {
   const router = useRouter();
+
+  const { username } = router.query;
 
   const { isOpen: isOpenDiscoverModal, setIsOpen: setIsOpenDiscoverModal } = discoverModalStore();
   const { isOpen: isOpenMessagesModal, setIsOpen: setIsOpenMessagesModal } = messageModalStore();
   const { isOpen: isOpenFilesModal, setIsOpen: setIsOpenFilesModal } = filesModalStore();
   const { isOpen: isOpenSettingsModal, setIsOpen: setIsOpenSettingsModal } = settingsModalStore();
+
+  const {
+    data: profile,
+    isLoading: isLoadingProfile,
+    isError: isErrorProfile,
+    error: errorProfile,
+  } = useGetProfile(username as string);
+
+  if (isLoadingProfile) return <div>Loading...</div>;
+  if (isErrorProfile) return <div>{errorProfile.response.data.message}</div>
+
+  console.log('profile', profile);
 
   return (
     <>
@@ -114,5 +131,24 @@ const Profile = (): JSX.Element => {
     </>
   );
 };
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const cookies = nookies.get(ctx);
+
+  if (!cookies['onlyself']) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      cookies,
+    },
+  };
+}
 
 export default Profile;

@@ -4,13 +4,19 @@ import Link from 'next/link';
 import MainLayout from '~/components/templates/MainLayout';
 
 import { signupValidation } from '~/helpers/hooks/useValidation';
+import { useSignUpMutation } from '~/helpers/tanstack/mutations/auth/signup';
+import clsx from 'clsx';
 
 const SignUp = (): JSX.Element => {
+  const signupMutation = useSignUpMutation();
+
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [repassword, setRepassword] = useState<string>('');
   const [formErrors, setFormErrors] = useState<any>();
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSignUp = async (e: React.FormEvent): Promise<void> => {
     try {
@@ -18,17 +24,32 @@ const SignUp = (): JSX.Element => {
 
       await signupValidation.validate({ name, email, password, repassword }, { abortEarly: false });
 
-      console.log('SIGN UP', {
-        name,
-        email,
-        password,
-      });
+      setIsLoading(true);
+
+      await signupMutation.mutateAsync(
+        {
+          name,
+          email,
+          password,
+        },
+        {
+          onError: (error: any) => {
+            setIsLoading(false);
+            setError(error.response.data.message);
+          },
+          onSuccess: () => {
+            setIsLoading(false);
+          },
+        },
+      );
     } catch (error: any) {
-      const errors: any = {};
-      error.inner.forEach((e: any) => {
-        errors[e.path] = e.message;
-      });
-      setFormErrors(errors);
+      if (error?.inner) {
+        const errors: any = {};
+        error.inner.forEach((e: any) => {
+          errors[e.path] = e.message;
+        });
+        setFormErrors(errors);
+      }
     }
   };
 
@@ -45,8 +66,13 @@ const SignUp = (): JSX.Element => {
             data-aos-delay="200"
           >
             <div className="flex w-full flex-col items-start gap-y-1">
-              <h1 className="text-accent-2 ml-2 text-xl font-bold">Sign Up</h1>
+              <h1 className="ml-2 text-xl font-bold text-accent-2">Sign Up</h1>
             </div>
+            {error && (
+              <div className="flex w-full flex-row items-center justify-center rounded-xl bg-red-400 p-3">
+                <p className="text-xs font-light text-white">{error}</p>
+              </div>
+            )}
             <form onSubmit={handleSignUp} className="flex w-full flex-col items-center gap-y-3">
               <div
                 className="flex w-full flex-col items-start gap-y-1"
@@ -57,11 +83,12 @@ const SignUp = (): JSX.Element => {
                   Full name
                 </label>
                 <input
-                  className="border-accent-3 w-full rounded-xl border bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
+                  className="w-full rounded-xl border border-accent-3 bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
                   type="text"
                   id="name"
                   value={name}
                   onChange={(e) => {
+                    setError(null);
                     setFormErrors(null);
                     setName(e.currentTarget.value);
                   }}
@@ -79,11 +106,12 @@ const SignUp = (): JSX.Element => {
                   Email
                 </label>
                 <input
-                  className="border-accent-3 w-full rounded-xl border bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
+                  className="w-full rounded-xl border border-accent-3 bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
                   type="text"
                   id="email"
                   value={email}
                   onChange={(e) => {
+                    setError(null);
                     setFormErrors(null);
                     setEmail(e.currentTarget.value);
                   }}
@@ -101,11 +129,12 @@ const SignUp = (): JSX.Element => {
                   Password
                 </label>
                 <input
-                  className="border-accent-3 w-full rounded-xl border bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
+                  className="w-full rounded-xl border border-accent-3 bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
                   type="password"
                   id="password"
                   value={password}
                   onChange={(e) => {
+                    setError(null);
                     setFormErrors(null);
                     setPassword(e.currentTarget.value);
                   }}
@@ -123,11 +152,12 @@ const SignUp = (): JSX.Element => {
                   Re-enter password
                 </label>
                 <input
-                  className="border-accent-3 w-full rounded-xl border bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
+                  className="w-full rounded-xl border border-accent-3 bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
                   type="password"
                   id="repassword"
                   value={repassword}
                   onChange={(e) => {
+                    setError(null);
                     setFormErrors(null);
                     setRepassword(e.currentTarget.value);
                   }}
@@ -143,15 +173,18 @@ const SignUp = (): JSX.Element => {
               >
                 <div className="flex w-full flex-row items-center justify-center gap-x-1 text-xs font-light text-accent-1 md:justify-start">
                   <span>Already have an account?</span>
-                  <Link href="/signin" className="text-accent-2 font-bold hover:underline">
+                  <Link href="/signin" className="font-bold text-accent-2 hover:underline">
                     Sign In
                   </Link>
                 </div>
                 <button
                   type="submit"
-                  className="w-full rounded-xl bg-accent-2 p-3 text-center text-xs text-accent-3 outline-none hover:bg-opacity-50 md:w-auto md:px-5"
+                  className={clsx(
+                    isLoading && 'opacity-50',
+                    'w-full rounded-xl bg-accent-2 p-3 text-center text-xs text-accent-3 outline-none hover:bg-opacity-50 md:w-auto md:px-5',
+                  )}
                 >
-                  Continue
+                  {isLoading ? 'Loading...' : 'Continue'}
                 </button>
               </div>
             </form>
