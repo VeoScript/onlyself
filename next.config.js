@@ -5,7 +5,6 @@ const nextConfig = {
     scrollRestoration: true,
   },
   images: {
-    dangerouslyAllowSVG: true,
     domains: ['i.ibb.co', 'pbs.twimg.com'],
   },
 };

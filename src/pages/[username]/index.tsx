@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { LogoProfile } from '~/components/atoms/Logo';
@@ -17,6 +18,7 @@ import {
   filesModalStore,
   settingsModalStore,
 } from '~/helpers/stores/modals';
+import { useGetUser } from '~/helpers/tanstack/queries/user';
 import { useGetProfile } from '~/helpers/tanstack/queries/profile';
 
 const Profile = (): JSX.Element => {
@@ -29,6 +31,8 @@ const Profile = (): JSX.Element => {
   const { isOpen: isOpenFilesModal, setIsOpen: setIsOpenFilesModal } = filesModalStore();
   const { isOpen: isOpenSettingsModal, setIsOpen: setIsOpenSettingsModal } = settingsModalStore();
 
+  const { data: user } = useGetUser();
+
   const {
     data: profile,
     isLoading: isLoadingProfile,
@@ -40,8 +44,6 @@ const Profile = (): JSX.Element => {
   if (!isLoadingProfile && errorProfile) {
     router.push('/404');
   }
-
-  console.log('profile', profile);
 
   return (
     <>
@@ -120,9 +122,9 @@ const Profile = (): JSX.Element => {
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       className="h-[5rem] w-[5rem] text-white"
                     >
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -164,6 +166,7 @@ const Profile = (): JSX.Element => {
                     )}
                   </div>
                   <MessageInputText
+                    isAuth={user ? true : false}
                     receiveFilesAnonymous={profile.is_receive_files_anonymous}
                     receoveImageAnonymous={profile.is_receive_images_anonymous}
                   />

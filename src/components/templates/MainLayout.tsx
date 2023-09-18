@@ -5,7 +5,7 @@ import { Menu, MenuMobile } from '../organisms/Menus';
 import { UserProps } from '~/shared/interfaces';
 
 interface MainLayoutProps {
-  user: UserProps;
+  user: UserProps | undefined;
   isLoading: boolean;
   children: React.ReactNode;
 }
