@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { discoverModalStore, messageModalStore, filesModalStore, settingsModalStore } from '~/helpers/stores/modals';
 
-const LogoDefault = () => {
+const LogoDefault = (): JSX.Element => {
   return (
     <Link href="/" className="flex flex-row items-center font-poppins text-2xl font-bold">
       <span className="text-accent-4">Only</span>
@@ -12,7 +12,7 @@ const LogoDefault = () => {
   );
 };
 
-const LogoProfile = () => {
+const LogoProfile = (): JSX.Element => {
   const { setIsOpen: setIsOpenDiscoverModal } = discoverModalStore();
   const { setIsOpen: setIsOpenMessagesModal } = messageModalStore();
   const { setIsOpen: setIsOpenFilesModal } = filesModalStore();

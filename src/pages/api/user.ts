@@ -6,6 +6,8 @@ export default withIronSessionApiRoute(
   async function handler(req: any, res: NextApiResponse) {
     if (req.method !== 'GET') return res.status(500).json('INVALID REQUEST METHOD');
 
+    if (!req.session.user) return res.status(403).json('NOT AUTHENTICATED');
+
     const user = await prisma.user.findUnique({
       where: {
         id: req.session.user.id,
@@ -17,6 +19,7 @@ export default withIronSessionApiRoute(
         name: true,
         username: true,
         email: true,
+        short_bio: true,
         facebook_link: true,
         instagram_link: true,
         twitterx_link: true,

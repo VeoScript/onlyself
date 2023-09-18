@@ -8,7 +8,7 @@ import { discoverModalStore } from '~/helpers/stores/modals';
 
 import { discoverPeople } from '~/shared/mocks/discover';
 
-const DiscoverModal = () => {
+const DiscoverModal = (): JSX.Element => {
   const router = useRouter();
 
   const { isOpen, setIsOpen } = discoverModalStore();
@@ -31,7 +31,7 @@ const DiscoverModal = () => {
               <label className="ml-3 text-base font-bold" htmlFor="search_people">
                 Discover
               </label>
-              {router.pathname === '/' && (
+              {router.pathname !== '/[username]' && (
                 <div className="flex p-3">
                   <button
                     data-tooltip-id="onlyself-tooltip"

@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { settingsModalStore } from '~/helpers/stores/modals';
 import { Switch } from '@headlessui/react';
 
-const SettingsModal = () => {
+const SettingsModal = (): JSX.Element => {
   const { isOpen } = settingsModalStore();
 
   return (

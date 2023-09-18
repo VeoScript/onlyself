@@ -7,7 +7,7 @@ import { filesModalStore } from '~/helpers/stores/modals';
 
 import { filesList } from '~/shared/mocks/files';
 
-const FilesModal = () => {
+const FilesModal = (): JSX.Element => {
   const { isOpen } = filesModalStore();
 
   const [search, setSearch] = useState<string>('');

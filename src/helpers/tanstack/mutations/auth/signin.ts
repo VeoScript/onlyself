@@ -16,7 +16,7 @@ export const useSignInMutation = () => {
       },
       onSuccess: async (data) => {
         queryClient.resetQueries();
-        Router.push('/profile');
+        Router.push(`/${data.data.username}`);
       },
     },
   );

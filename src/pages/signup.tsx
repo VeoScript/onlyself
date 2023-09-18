@@ -1,14 +1,19 @@
 import { useState } from 'react';
+import nookies from 'nookies';
+import clsx from 'clsx';
 import Head from 'next/head';
 import Link from 'next/link';
 import MainLayout from '~/components/templates/MainLayout';
 
+import { GetServerSidePropsContext } from 'next';
 import { signupValidation } from '~/helpers/hooks/useValidation';
+import { useGetUser } from '~/helpers/tanstack/queries/user';
 import { useSignUpMutation } from '~/helpers/tanstack/mutations/auth/signup';
-import clsx from 'clsx';
 
 const SignUp = (): JSX.Element => {
   const signupMutation = useSignUpMutation();
+
+  const { data: user, isLoading: isLoadingUser } = useGetUser();
 
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -58,7 +63,7 @@ const SignUp = (): JSX.Element => {
       <Head>
         <title>Onlyself | Sign Up</title>
       </Head>
-      <MainLayout>
+      <MainLayout user={user} isLoading={isLoadingUser}>
         <div className="mb-10 mt-10 flex h-screen w-full flex-col items-center justify-start md:-mt-20 md:mb-0 md:justify-center">
           <div
             className="flex w-full max-w-md flex-col gap-y-5"
@@ -194,5 +199,24 @@ const SignUp = (): JSX.Element => {
     </>
   );
 };
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const cookies = nookies.get(ctx);
+
+  if (cookies['onlyself']) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      cookies,
+    },
+  };
+}
 
 export default SignUp;

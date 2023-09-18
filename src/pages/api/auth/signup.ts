@@ -25,7 +25,7 @@ export default withIronSessionApiRoute(
 
     const hashedPassword = await bcrypt.hash(password, roundsOfHashing);
 
-    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
     let username = '';
 
