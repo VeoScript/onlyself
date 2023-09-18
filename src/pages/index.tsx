@@ -10,16 +10,14 @@ import { useGetUser } from '~/helpers/tanstack/queries/user';
 const Home = (): JSX.Element => {
   const { setIsOpen: setIsOpenDiscoverModal } = discoverModalStore();
 
-  const {data: user, isLoading: isLoadingUser} = useGetUser();
-
-  console.log("user", user)
+  const { data: user, isLoading: isLoadingUser } = useGetUser();
 
   return (
     <>
       <Head>
         <title>Onlyself</title>
       </Head>
-      <MainLayout>
+      <MainLayout user={user} isLoading={isLoadingUser}>
         <div className="flex h-full w-full flex-col items-center justify-center gap-y-8 py-20 md:-mt-20 md:h-screen md:py-0">
           <div className="flex w-full max-w-full flex-col items-center gap-y-3 md:max-w-5xl">
             <h1
@@ -50,10 +48,10 @@ const Home = (): JSX.Element => {
               Discover
             </button>
             <Link
-              href="/signin"
+              href={user ? '/pricing' : '/signin'}
               className="w-[6rem] rounded-xl bg-accent-2 px-3 py-3 text-center text-sm text-accent-3 hover:bg-opacity-50 md:w-[10rem] md:px-5"
             >
-              Sign in
+              {user ? 'Subscription' : 'Sign In'}
             </Link>
           </div>
         </div>

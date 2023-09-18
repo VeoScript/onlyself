@@ -19,7 +19,8 @@ const poppins = Poppins({
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 3, // retry to refetch the data from api if the internet is slow or no internet connection.
+      retry: 1,
+      refetchOnWindowFocus: false,
     },
   },
 });

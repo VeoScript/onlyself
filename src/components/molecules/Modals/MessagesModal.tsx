@@ -7,7 +7,7 @@ import { messageModalStore } from '~/helpers/stores/modals';
 
 import { messagesList } from '~/shared/mocks/messages';
 
-const MessagesModal = () => {
+const MessagesModal = (): JSX.Element => {
   const { isOpen } = messageModalStore();
 
   const [search, setSearch] = useState<string>('');

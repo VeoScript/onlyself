@@ -1,14 +1,19 @@
 import { useState } from 'react';
+import nookies from 'nookies';
+import clsx from 'clsx';
 import Head from 'next/head';
 import Link from 'next/link';
 import MainLayout from '~/components/templates/MainLayout';
 
+import { GetServerSidePropsContext } from 'next';
 import { signinValidation } from '~/helpers/hooks/useValidation';
+import { useGetUser } from '~/helpers/tanstack/queries/user';
 import { useSignInMutation } from '~/helpers/tanstack/mutations/auth/signin';
-import clsx from 'clsx';
 
 const SignIn = (): JSX.Element => {
   const signinMutation = useSignInMutation();
+
+  const { data: user, isLoading: isLoadingUser } = useGetUser();
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -55,7 +60,7 @@ const SignIn = (): JSX.Element => {
       <Head>
         <title>Onlyself | Sign In</title>
       </Head>
-      <MainLayout>
+      <MainLayout user={user} isLoading={isLoadingUser}>
         <div className="mt-10 flex h-screen w-full flex-col items-center justify-start md:-mt-20 md:justify-center">
           <div className="flex w-full max-w-md flex-col gap-y-5">
             <div className="flex w-full flex-col items-start gap-y-1">
@@ -128,7 +133,7 @@ const SignIn = (): JSX.Element => {
                   type="submit"
                   className={clsx(
                     isLoading && 'opacity-50',
-                    'w-full rounded-xl bg-accent-2 p-3 text-center text-xs text-accent-3 outline-none hover:bg-opacity-50 md:w-auto md:px-5'
+                    'w-full rounded-xl bg-accent-2 p-3 text-center text-xs text-accent-3 outline-none hover:bg-opacity-50 md:w-auto md:px-5',
                   )}
                 >
                   {isLoading ? 'Loading...' : 'Continue'}
@@ -141,5 +146,24 @@ const SignIn = (): JSX.Element => {
     </>
   );
 };
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const cookies = nookies.get(ctx);
+
+  if (cookies['onlyself']) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      cookies,
+    },
+  };
+}
 
 export default SignIn;
