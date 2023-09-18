@@ -5,11 +5,13 @@ import ActivityIndicator from '~/components/atoms/ActivityIndicator';
 
 import { Switch } from '@headlessui/react';
 import { toast } from 'react-hot-toast';
+import { updateAccountValidation, updatePasswordValidation } from '~/helpers/hooks/useValidation';
 import { settingsModalStore } from '~/helpers/stores/modals';
 import { useGetUser } from '~/helpers/tanstack/queries/user';
 import { useUpdateProfileMutation } from '~/helpers/tanstack/mutations/account/update-profile';
 import { useUpdatePrivacyOptionsMutation } from '~/helpers/tanstack/mutations/account/update-privacy';
 import { useUpdateSocialLinksMutation } from '~/helpers/tanstack/mutations/account/update-social-links';
+import { useUpdatePasswordMutation } from '~/helpers/tanstack/mutations/account/update-password';
 
 const SettingsModal = (): JSX.Element => {
   const { data: user, isLoading: isLoadingUser } = useGetUser();
@@ -17,12 +19,18 @@ const SettingsModal = (): JSX.Element => {
   const updateProfileMutation = useUpdateProfileMutation();
   const updatePrivacyOptionsMutation = useUpdatePrivacyOptionsMutation();
   const updateSocialLinksMutation = useUpdateSocialLinksMutation();
+  const updatePasswordMutation = useUpdatePasswordMutation();
 
-  const { isOpen } = settingsModalStore();
+  const { isOpen, setIsOpen } = settingsModalStore();
 
   // buttons loading states...
   const [isPendingProfile, setIsPendingProfile] = useState<boolean>(false);
   const [isPendingSocialLinks, setIsPendingSocialLinks] = useState<boolean>(false);
+  const [isPendingUpdatePassword, setIsPendingUpdatePassword] = useState<boolean>(false);
+
+  // settings errors states...
+  const [updateAccountFormErrors, setUpdateAccountFormErrors] = useState<any>(null);
+  const [changePasswordFormErrors, setChangePasswordFormErrors] = useState<any>(null);
 
   // profile settings states...
   const [coverPhoto, setCoverPhoto] = useState<string | null>('');
@@ -70,27 +78,40 @@ const SettingsModal = (): JSX.Element => {
     }
   }, [user]);
 
-  const handleUpdateAccount = async () => {
-    setIsPendingProfile(true);
-    await updateProfileMutation.mutateAsync(
-      {
-        profile_photo: profilePhoto as string,
-        cover_photo: coverPhoto as string,
-        name,
-        username,
-        email,
-      },
-      {
-        onError: (error) => {
-          setIsPendingProfile(false);
-          toast.error(error.response.data.message);
+  const handleUpdateAccount = async (): Promise<void> => {
+    try {
+      await updateAccountValidation.validate({ name, username, email }, { abortEarly: false });
+
+      setIsPendingProfile(true);
+
+      await updateProfileMutation.mutateAsync(
+        {
+          profile_photo: profilePhoto as string,
+          cover_photo: coverPhoto as string,
+          name,
+          username,
+          email,
         },
-        onSuccess: () => {
-          setIsPendingProfile(false);
-          toast.success('Updated successfully.');
+        {
+          onError: (error) => {
+            setIsPendingProfile(false);
+            toast.error(error.response.data.message);
+          },
+          onSuccess: () => {
+            setIsPendingProfile(false);
+            toast.success('Updated successfully.');
+          },
         },
-      },
-    );
+      );
+    } catch (error: any) {
+      if (error?.inner) {
+        const errors: any = {};
+        error.inner.forEach((e: any) => {
+          errors[e.path] = e.message;
+        });
+        setUpdateAccountFormErrors(errors);
+      }
+    }
   };
 
   const handleUpdatePrivacyOptions = async ({
@@ -101,7 +122,7 @@ const SettingsModal = (): JSX.Element => {
     isDisplayName: boolean;
     isReceiveFilesAnonymous: boolean;
     isReceiveImagesAnonymous: boolean;
-  }) => {
+  }): Promise<void> => {
     await updatePrivacyOptionsMutation.mutateAsync(
       {
         is_display_name: isDisplayName,
@@ -119,8 +140,11 @@ const SettingsModal = (): JSX.Element => {
     );
   };
 
-  const handleUpdateSocialLinks = async () => {
+  const handleUpdateSocialLinks = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+
     setIsPendingSocialLinks(true);
+
     await updateSocialLinksMutation.mutateAsync(
       {
         facebook_link: facebookLink,
@@ -141,6 +165,45 @@ const SettingsModal = (): JSX.Element => {
         },
       },
     );
+  };
+
+  const handleUpdatePassword = async (e: React.FormEvent): Promise<void> => {
+    try {
+      e.preventDefault();
+
+      await updatePasswordValidation.validate(
+        { oldpassword: oldPassword, newpassword: newPassword, repassword },
+        { abortEarly: false },
+      );
+
+      setIsPendingUpdatePassword(true);
+
+      await updatePasswordMutation.mutateAsync(
+        {
+          old_password: oldPassword,
+          new_password: newPassword,
+        },
+        {
+          onError: (error) => {
+            setIsPendingUpdatePassword(false);
+            toast.error(error.response.data.message);
+          },
+          onSuccess: () => {
+            setIsPendingUpdatePassword(false);
+            toast.success('Your password is changed successfully.');
+            setIsOpen(false);
+          },
+        },
+      );
+    } catch (error: any) {
+      if (error?.inner) {
+        const errors: any = {};
+        error.inner.forEach((e: any) => {
+          errors[e.path] = e.message;
+        });
+        setChangePasswordFormErrors(errors);
+      }
+    }
   };
 
   return (
@@ -240,7 +303,7 @@ const SettingsModal = (): JSX.Element => {
                     </svg>
                   </button>
                 </div>
-                <div className="flex w-full flex-row items-center justify-center gap-x-2">
+                <div className="flex w-full flex-row items-start justify-center gap-x-2">
                   <div className="flex w-full flex-col items-start gap-y-1">
                     <label className="ml-1 text-xs font-light" htmlFor="name">
                       Full name
@@ -251,8 +314,16 @@ const SettingsModal = (): JSX.Element => {
                       type="text"
                       id="name"
                       value={name}
-                      onChange={(e) => setName(e.currentTarget.value)}
+                      onChange={(e) => {
+                        setUpdateAccountFormErrors(null);
+                        setName(e.currentTarget.value);
+                      }}
                     />
+                    {updateAccountFormErrors && updateAccountFormErrors.name && (
+                      <span className="ml-2 mt-1 text-xs text-red-400">
+                        {updateAccountFormErrors.name}
+                      </span>
+                    )}
                   </div>
                   <div className="flex w-full flex-col items-start gap-y-1">
                     <label className="ml-1 text-xs font-light" htmlFor="username">
@@ -264,8 +335,16 @@ const SettingsModal = (): JSX.Element => {
                       type="text"
                       id="username"
                       value={username}
-                      onChange={(e) => setUsername(e.currentTarget.value)}
+                      onChange={(e) => {
+                        setUpdateAccountFormErrors(null);
+                        setUsername(e.currentTarget.value);
+                      }}
                     />
+                    {updateAccountFormErrors && updateAccountFormErrors.username && (
+                      <span className="ml-2 mt-1 text-xs text-red-400">
+                        {updateAccountFormErrors.username}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="flex w-full flex-col items-start gap-y-1">
@@ -278,8 +357,16 @@ const SettingsModal = (): JSX.Element => {
                     type="text"
                     id="email"
                     value={email}
-                    onChange={(e) => setEmail(e.currentTarget.value)}
+                    onChange={(e) => {
+                      setUpdateAccountFormErrors(null);
+                      setEmail(e.currentTarget.value);
+                    }}
                   />
+                  {updateAccountFormErrors && updateAccountFormErrors.email && (
+                    <span className="ml-2 mt-1 text-xs text-red-400">
+                      {updateAccountFormErrors.email}
+                    </span>
+                  )}
                 </div>
                 <button
                   disabled={isPendingProfile}
@@ -379,7 +466,10 @@ const SettingsModal = (): JSX.Element => {
                 </div>
               </div>
               {/* SOCIAL MEDIA LINK */}
-              <div className="flex w-full flex-col items-start gap-y-3 px-3 pb-3">
+              <form
+                onSubmit={handleUpdateSocialLinks}
+                className="flex w-full flex-col items-start gap-y-3 px-3 pb-3"
+              >
                 <div className="flex w-full flex-col items-start justify-center gap-y-2 py-3">
                   <h1 className="text-base font-bold">Social Links</h1>
                 </div>
@@ -457,18 +547,20 @@ const SettingsModal = (): JSX.Element => {
                 </div>
                 <button
                   disabled={isPendingSocialLinks}
-                  type="button"
+                  type="submit"
                   className={clsx(
                     isPendingSocialLinks && 'opacity-50',
                     'w-full rounded-lg bg-black p-2.5 text-sm font-light text-white outline-none transition duration-200 hover:bg-opacity-50',
                   )}
-                  onClick={handleUpdateSocialLinks}
                 >
                   {isPendingSocialLinks ? 'Saving...' : 'Save'}
                 </button>
-              </div>
+              </form>
               {/* CHANGE PASSWORD */}
-              <div className="flex w-full flex-col items-start gap-y-3 px-3 pb-3">
+              <form
+                onSubmit={handleUpdatePassword}
+                className="flex w-full flex-col items-start gap-y-3 px-3 pb-3"
+              >
                 <div className="flex w-full flex-col items-start justify-center gap-y-2 py-3">
                   <h1 className="text-base font-bold">Change Password</h1>
                 </div>
@@ -481,10 +573,18 @@ const SettingsModal = (): JSX.Element => {
                     type="password"
                     id="oldpassword"
                     value={oldPassword}
-                    onChange={(e) => setOldPassword(e.currentTarget.value)}
+                    onChange={(e) => {
+                      setChangePasswordFormErrors(null);
+                      setOldPassword(e.currentTarget.value);
+                    }}
                   />
+                  {changePasswordFormErrors && changePasswordFormErrors.oldpassword && (
+                    <span className="ml-2 mt-1 text-xs text-red-400">
+                      {changePasswordFormErrors.oldpassword}
+                    </span>
+                  )}
                 </div>
-                <div className="flex w-full flex-row items-center justify-center gap-x-2">
+                <div className="flex w-full flex-row items-start justify-center gap-x-2">
                   <div className="flex w-full flex-col items-start gap-y-1">
                     <label className="ml-1 text-xs font-light" htmlFor="newpassword">
                       New Password
@@ -494,8 +594,16 @@ const SettingsModal = (): JSX.Element => {
                       type="password"
                       id="newpassword"
                       value={newPassword}
-                      onChange={(e) => setNewPassword(e.currentTarget.value)}
+                      onChange={(e) => {
+                        setChangePasswordFormErrors(null);
+                        setNewPassword(e.currentTarget.value);
+                      }}
                     />
+                    {changePasswordFormErrors && changePasswordFormErrors.newpassword && (
+                      <span className="ml-2 mt-1 text-xs text-red-400">
+                        {changePasswordFormErrors.newpassword}
+                      </span>
+                    )}
                   </div>
                   <div className="flex w-full flex-col items-start gap-y-1">
                     <label className="ml-1 text-xs font-light" htmlFor="repassword">
@@ -506,17 +614,29 @@ const SettingsModal = (): JSX.Element => {
                       type="password"
                       id="repassword"
                       value={repassword}
-                      onChange={(e) => setRepassword(e.currentTarget.value)}
+                      onChange={(e) => {
+                        setChangePasswordFormErrors(null);
+                        setRepassword(e.currentTarget.value);
+                      }}
                     />
+                    {changePasswordFormErrors && changePasswordFormErrors.repassword && (
+                      <span className="ml-2 mt-1 text-xs text-red-400">
+                        {changePasswordFormErrors.repassword}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <button
-                  className="w-full rounded-lg bg-black p-2.5 text-sm font-light text-white outline-none transition duration-200 hover:bg-opacity-50"
-                  type="button"
+                  disabled={isPendingUpdatePassword}
+                  type="submit"
+                  className={clsx(
+                    isPendingUpdatePassword && 'opacity-50',
+                    'w-full rounded-lg bg-black p-2.5 text-sm font-light text-white outline-none transition duration-200 hover:bg-opacity-50',
+                  )}
                 >
-                  Confirm
+                  {isPendingUpdatePassword ? 'Changing...' : 'Confirm'}
                 </button>
-              </div>
+              </form>
             </>
           )}
         </div>
