@@ -8,7 +8,6 @@ const ActivityIndicator = ({className}: ActivityIndicatorProps): JSX.Element => 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      style={{margin: 'auto', background: 'none', display: 'block', shapeRendering: 'auto',}}
       width="200px"
       height="200px"
       viewBox="0 0 100 100"
@@ -20,9 +19,9 @@ const ActivityIndicator = ({className}: ActivityIndicatorProps): JSX.Element => 
         cy="50"
         fill="none"
         stroke="#ffffff"
-        stroke-width="10"
+        strokeWidth="10"
         r="35"
-        stroke-dasharray="164.93361431346415 56.97787143782138"
+        strokeDasharray="164.93361431346415 56.97787143782138"
       >
         <animateTransform
           attributeName="transform"

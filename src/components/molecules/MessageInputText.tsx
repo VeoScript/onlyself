@@ -3,11 +3,13 @@ import clsx from 'clsx';
 import { Switch } from '@headlessui/react';
 
 interface MessageInputTextProps {
+  isAuth: boolean;
   receiveFilesAnonymous: boolean;
   receoveImageAnonymous: boolean;
 }
 
 const MessageInputText = ({
+  isAuth,
   receiveFilesAnonymous,
   receoveImageAnonymous,
 }: MessageInputTextProps): JSX.Element => {
@@ -22,22 +24,25 @@ const MessageInputText = ({
       <div className="flex w-full flex-row items-center justify-between bg-white bg-opacity-20 p-3 backdrop-blur-sm">
         <h1 className="text-xs text-white">Send me a message! 🤗</h1>
         <div className="flex items-center gap-x-2">
-          <span className="text-xs font-light text-white">Anonymous</span>
-          <Switch
-            checked={isAnonymous}
-            onChange={() => setIsAnonymous(!isAnonymous)}
-            className={clsx(
-              isAnonymous ? 'bg-blue-600' : 'bg-gray-200',
-              'relative inline-flex h-6 w-11 items-center rounded-full',
-            )}
-          >
-            <span
+          <span className="text-xs font-light text-white">As anonymous</span>
+          {!isAuth && <span className="text-2xl text-accent-2">&bull;</span>}
+          {isAuth && (
+            <Switch
+              checked={isAnonymous}
+              onChange={() => setIsAnonymous(!isAnonymous)}
               className={clsx(
-                isAnonymous ? 'translate-x-6 bg-white' : 'translate-x-1 bg-blue-600',
-                'inline-block h-4 w-4 transform rounded-full transition',
+                isAnonymous ? 'bg-blue-600' : 'bg-gray-200',
+                'relative inline-flex h-6 w-11 items-center rounded-full',
               )}
-            />
-          </Switch>
+            >
+              <span
+                className={clsx(
+                  isAnonymous ? 'translate-x-6 bg-white' : 'translate-x-1 bg-blue-600',
+                  'inline-block h-4 w-4 transform rounded-full transition',
+                )}
+              />
+            </Switch>
+          )}
         </div>
       </div>
       <textarea

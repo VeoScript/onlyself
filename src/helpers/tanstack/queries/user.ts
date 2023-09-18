@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { UserProps } from '~/shared/interfaces';
+
 export const useGetUser = () => {
-  return useQuery(
+  return useQuery<UserProps>(
     ['user'],
     async () => {
       const user = await axios.get('/api/user');

@@ -9,7 +9,7 @@ import { UserProps } from '~/shared/interfaces';
 import { useSignOutMutation } from '~/helpers/tanstack/mutations/auth/signinout';
 
 interface MenuProps {
-  user: UserProps;
+  user: UserProps | undefined;
   isLoading: boolean;
   isOpenMenu: boolean;
   setIsOpenMenu: (value: boolean) => void;
@@ -88,9 +88,9 @@ const Menu = ({ user, isLoading, isOpenMenu, setIsOpenMenu }: MenuProps): JSX.El
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       className="h-5 w-5 text-white"
                     >
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -182,9 +182,9 @@ const MenuMobile = ({ user, isLoading, isOpenMenu }: MenuProps): JSX.Element => 
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="h-6 w-6 text-white"
                 >
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
