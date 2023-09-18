@@ -1,5 +1,4 @@
 import type { NextApiResponse } from 'next';
-import { Prisma } from '@prisma/client';
 import { withIronSessionApiRoute } from 'iron-session/next';
 import prisma from '~/config/Prisma';
 
@@ -10,18 +9,16 @@ export default withIronSessionApiRoute(
 
       if (!req.session.user) return res.status(403).json('NOT AUTHENTICATED');
 
-      const { cover_photo, profile_photo, name, username, email } = req.body;
+      const { is_display_name, is_receive_files_anonymous, is_receive_images_anonymous } = req.body;
 
       const user = await prisma.user.update({
         where: {
           id: req.session.user.id,
         },
         data: {
-          cover_photo,
-          profile_photo,
-          name,
-          username,
-          email,
+          is_display_name,
+          is_receive_files_anonymous,
+          is_receive_images_anonymous,
         },
       });
 
@@ -29,25 +26,11 @@ export default withIronSessionApiRoute(
         res.status(200).json(user);
       } else {
         return res.status(400).json({
-          message: 'Something wrong while updating the profile.',
+          message: 'Something wrong while updating the privacy options.',
         });
       }
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        // P2002 - is prisma error code for unique constraint violation...
-        if (error.code === 'P2002') {
-          if (error?.meta?.target === 'User_username_key') {
-            return res.status(400).json({
-              message: 'Username is not available.',
-            });
-          }
-          if (error?.meta?.target === 'User_email_key') {
-            return res.status(400).json({
-              message: 'Email is not available.',
-            });
-          }
-        }
-      }
+      return res.status(500).json(error);
     }
   },
   {

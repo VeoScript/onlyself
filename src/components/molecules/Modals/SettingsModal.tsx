@@ -8,15 +8,21 @@ import { toast } from 'react-hot-toast';
 import { settingsModalStore } from '~/helpers/stores/modals';
 import { useGetUser } from '~/helpers/tanstack/queries/user';
 import { useUpdateProfileMutation } from '~/helpers/tanstack/mutations/account/update-profile';
+import { useUpdatePrivacyOptionsMutation } from '~/helpers/tanstack/mutations/account/update-privacy';
+import { useUpdateSocialLinksMutation } from '~/helpers/tanstack/mutations/account/update-social-links';
 
 const SettingsModal = (): JSX.Element => {
   const { data: user, isLoading: isLoadingUser } = useGetUser();
 
   const updateProfileMutation = useUpdateProfileMutation();
+  const updatePrivacyOptionsMutation = useUpdatePrivacyOptionsMutation();
+  const updateSocialLinksMutation = useUpdateSocialLinksMutation();
 
   const { isOpen } = settingsModalStore();
 
-  const [isPending, setIsPending] = useState<boolean>(false);
+  // buttons loading states...
+  const [isPendingProfile, setIsPendingProfile] = useState<boolean>(false);
+  const [isPendingSocialLinks, setIsPendingSocialLinks] = useState<boolean>(false);
 
   // profile settings states...
   const [coverPhoto, setCoverPhoto] = useState<string | null>('');
@@ -64,8 +70,8 @@ const SettingsModal = (): JSX.Element => {
     }
   }, [user]);
 
-  const handleUpdateProfile = async () => {
-    setIsPending(true);
+  const handleUpdateAccount = async () => {
+    setIsPendingProfile(true);
     await updateProfileMutation.mutateAsync(
       {
         profile_photo: profilePhoto as string,
@@ -76,11 +82,61 @@ const SettingsModal = (): JSX.Element => {
       },
       {
         onError: (error) => {
-          setIsPending(false);
+          setIsPendingProfile(false);
           toast.error(error.response.data.message);
         },
         onSuccess: () => {
-          setIsPending(false);
+          setIsPendingProfile(false);
+          toast.success('Updated successfully.');
+        },
+      },
+    );
+  };
+
+  const handleUpdatePrivacyOptions = async ({
+    isDisplayName,
+    isReceiveFilesAnonymous,
+    isReceiveImagesAnonymous,
+  }: {
+    isDisplayName: boolean;
+    isReceiveFilesAnonymous: boolean;
+    isReceiveImagesAnonymous: boolean;
+  }) => {
+    await updatePrivacyOptionsMutation.mutateAsync(
+      {
+        is_display_name: isDisplayName,
+        is_receive_files_anonymous: isReceiveFilesAnonymous,
+        is_receive_images_anonymous: isReceiveImagesAnonymous,
+      },
+      {
+        onError: (error) => {
+          toast.error(error.response.data.message);
+        },
+        onSuccess: () => {
+          toast.success('Updated successfully.');
+        },
+      },
+    );
+  };
+
+  const handleUpdateSocialLinks = async () => {
+    setIsPendingSocialLinks(true);
+    await updateSocialLinksMutation.mutateAsync(
+      {
+        facebook_link: facebookLink,
+        instagram_link: instagramLink,
+        twitterx_link: twitterxLink,
+        linkedin_link: linkedinLink,
+        github_link: githubLink,
+        website_link: websiteLink,
+      },
+      {
+        onError: (error) => {
+          setIsPendingSocialLinks(false);
+          toast.error(error.response.data.message);
+        },
+        onSuccess: () => {
+          setIsPendingSocialLinks(false);
           toast.success('Updated successfully.');
         },
       },
@@ -226,15 +282,15 @@ const SettingsModal = (): JSX.Element => {
                   />
                 </div>
                 <button
-                  disabled={isPending}
+                  disabled={isPendingProfile}
                   type="button"
                   className={clsx(
-                    isPending && 'opacity-50',
+                    isPendingProfile && 'opacity-50',
                     'w-full rounded-lg bg-black p-2.5 text-sm font-light text-white outline-none transition duration-200 hover:bg-opacity-50',
                   )}
-                  onClick={handleUpdateProfile}
+                  onClick={handleUpdateAccount}
                 >
-                  {isPending ? 'Loading...' : 'Update'}
+                  {isPendingProfile ? 'Loading...' : 'Update'}
                 </button>
               </div>
               {/* PRIVACY OPTIONS */}
@@ -246,7 +302,14 @@ const SettingsModal = (): JSX.Element => {
                   <p className="text-sm font-light">Display your name in your profile</p>
                   <Switch
                     checked={displayName}
-                    onChange={() => setDisplayName(!displayName)}
+                    onChange={() => {
+                      setDisplayName(!displayName);
+                      handleUpdatePrivacyOptions({
+                        isDisplayName: !displayName,
+                        isReceiveFilesAnonymous: receiveFilesAnonymous,
+                        isReceiveImagesAnonymous: receiveImagesAnonymous,
+                      });
+                    }}
                     className={clsx(
                       displayName ? 'bg-blue-600' : 'bg-gray-200',
                       'relative inline-flex h-6 w-11 items-center rounded-full',
@@ -264,7 +327,14 @@ const SettingsModal = (): JSX.Element => {
                   <p className="text-sm font-light">Receive files from anonymous</p>
                   <Switch
                     checked={receiveFilesAnonymous}
-                    onChange={() => setReceiveFilesAnonymous(!receiveFilesAnonymous)}
+                    onChange={() => {
+                      setReceiveFilesAnonymous(!receiveFilesAnonymous);
+                      handleUpdatePrivacyOptions({
+                        isDisplayName: displayName,
+                        isReceiveFilesAnonymous: !receiveFilesAnonymous,
+                        isReceiveImagesAnonymous: receiveImagesAnonymous,
+                      });
+                    }}
                     className={clsx(
                       receiveFilesAnonymous ? 'bg-blue-600' : 'bg-gray-200',
                       'relative inline-flex h-6 w-11 items-center rounded-full',
@@ -284,7 +354,14 @@ const SettingsModal = (): JSX.Element => {
                   <p className="text-sm font-light">Receive images from anonymous</p>
                   <Switch
                     checked={receiveImagesAnonymous}
-                    onChange={() => setReceiveImagesAnonymous(!receiveImagesAnonymous)}
+                    onChange={() => {
+                      setReceiveImagesAnonymous(!receiveImagesAnonymous);
+                      handleUpdatePrivacyOptions({
+                        isDisplayName: displayName,
+                        isReceiveFilesAnonymous: receiveFilesAnonymous,
+                        isReceiveImagesAnonymous: !receiveImagesAnonymous,
+                      });
+                    }}
                     className={clsx(
                       receiveImagesAnonymous ? 'bg-blue-600' : 'bg-gray-200',
                       'relative inline-flex h-6 w-11 items-center rounded-full',
@@ -379,10 +456,15 @@ const SettingsModal = (): JSX.Element => {
                   />
                 </div>
                 <button
-                  className="w-full rounded-lg bg-black p-2.5 text-sm font-light text-white outline-none transition duration-200 hover:bg-opacity-50"
+                  disabled={isPendingSocialLinks}
                   type="button"
+                  className={clsx(
+                    isPendingSocialLinks && 'opacity-50',
+                    'w-full rounded-lg bg-black p-2.5 text-sm font-light text-white outline-none transition duration-200 hover:bg-opacity-50',
+                  )}
+                  onClick={handleUpdateSocialLinks}
                 >
-                  Save
+                  {isPendingSocialLinks ? 'Saving...' : 'Save'}
                 </button>
               </div>
               {/* CHANGE PASSWORD */}

@@ -2,19 +2,20 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import Router from 'next/router';
 
-export const useUpdateProfileMutation = () => {
+export const useUpdateSocialLinksMutation = () => {
   const queryClient = useQueryClient();
   return useMutation(
     (args: {
-      cover_photo: string;
-      profile_photo: string;
-      name: string;
-      username: string;
-      email: string;
-    }) => axios.patch('/api/account/update-profile', args),
+      facebook_link: string;
+      instagram_link: string;
+      twitterx_link: string;
+      linkedin_link: string;
+      github_link: string;
+      website_link: string;
+    }) => axios.patch('/api/account/update-social-links', args),
     {
       onError: (error: any) => {
-        console.error('UPDATE PROFILE ERROR', error.response.data);
+        console.error('UPDATE SOCIAL LINKS ERROR', error.response.data);
       },
       onSuccess: async (data) => {
         queryClient.invalidateQueries(['user']);
