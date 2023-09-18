@@ -40,7 +40,7 @@ const Profile = (): JSX.Element => {
 
   if (isLoadingProfile) return <Loading />;
 
-  if (!isLoadingProfile && errorProfile) {
+  if (!isLoadingProfile && profile === undefined) {
     router.push('/404');
   }
 
