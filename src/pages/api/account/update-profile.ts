@@ -10,15 +10,38 @@ export default withIronSessionApiRoute(
 
       if (!req.session.user) return res.status(403).json('NOT AUTHENTICATED');
 
-      const { cover_photo, profile_photo, name, username, email } = req.body;
+      const { profile_photo, cover_photo, name, username, email } = req.body;
 
+      // upload/change profile photo...
+      if (profile_photo) {
+        await prisma.user.update({
+          where: {
+            id: req.session.user.id,
+          },
+          data: {
+            profile_photo,
+          },
+        });
+      }
+
+      // upload/change cover photo...
+      if (cover_photo) {
+        await prisma.user.update({
+          where: {
+            id: req.session.user.id,
+          },
+          data: {
+            cover_photo,
+          },
+        });
+      }
+
+      // update/change name, username, or email...
       const user = await prisma.user.update({
         where: {
           id: req.session.user.id,
         },
         data: {
-          cover_photo,
-          profile_photo,
           name,
           username,
           email,

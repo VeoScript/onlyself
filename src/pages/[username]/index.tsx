@@ -85,16 +85,16 @@ const Profile = (): JSX.Element => {
                   </svg>
                 </button>
               </div>
-              <div className="absolute inset-0 h-full w-full bg-black bg-opacity-10 backdrop-blur-sm" />
+              <div className="absolute inset-0 h-full w-full bg-black bg-opacity-30 backdrop-blur-sm" />
               {profile.cover_photo ? (
                 <Image
                   priority
                   src={profile.cover_photo}
                   className="h-full w-full bg-accent-3 object-cover"
                   alt="cover_image"
-                  width={1000}
-                  height={1000}
-                  quality={100}
+                  width={500}
+                  height={500}
+                  quality={80}
                 />
               ) : (
                 <div className="h-full w-full bg-accent-3 object-cover" />
