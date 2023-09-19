@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react';
 import { LogoDefault } from '../atoms/Logo';
+import LegacyImage from 'next/legacy/image';
 import Link from 'next/link';
-import Image from 'next/image';
 import clsx from 'clsx';
 import * as Headless from '@headlessui/react';
 
@@ -70,15 +70,18 @@ const Menu = ({ user, isLoading, isOpenMenu, setIsOpenMenu }: MenuProps): JSX.El
             <Headless.Menu as="div" className="relative inline-block text-left">
               <Headless.Menu.Button className="outline-none">
                 {user.profile_photo ? (
-                  <Image
-                    priority
-                    src={user.profile_photo}
-                    className="h-[2.5rem] w-[2.5rem] rounded-full bg-black object-cover"
-                    alt="cover_image"
-                    width={1000}
-                    height={1000}
-                    quality={100}
-                  />
+                  <div className="relative flex h-[2.5rem] w-[2.5rem] overflow-hidden rounded-full">
+                    <LegacyImage
+                      priority
+                      layout="fill"
+                      src={user.profile_photo}
+                      blurDataURL={user.profile_photo}
+                      className="bg-black object-cover"
+                      alt="profile_image"
+                      placeholder="blur"
+                      quality={100}
+                    />
+                  </div>
                 ) : (
                   <div className="flex h-[2.5rem] w-[2.5rem] flex-row items-center justify-center rounded-full bg-black object-cover">
                     <svg
@@ -99,11 +102,11 @@ const Menu = ({ user, isLoading, isOpenMenu, setIsOpenMenu }: MenuProps): JSX.El
                   </div>
                 )}
               </Headless.Menu.Button>
-              <Headless.Menu.Items className="absolute right-0 mt-2 flex w-56 origin-top-right flex-col divide-y divide-accent-3 overflow-hidden rounded-xl">
+              <Headless.Menu.Items className="absolute right-0 mt-2 flex w-56 origin-top-right flex-col divide-y divide-accent-3 overflow-hidden rounded-lg">
                 <Headless.Menu.Item as={Fragment}>
                   <Link
                     href={`/${user.username}`}
-                    className="w-full bg-accent-1 p-3 text-sm text-white hover:bg-opacity-50"
+                    className="w-full bg-accent-1 p-3 text-xs text-white hover:bg-opacity-50"
                   >
                     {isLoading ? 'Loading...' : user.name}
                   </Link>
@@ -112,7 +115,7 @@ const Menu = ({ user, isLoading, isOpenMenu, setIsOpenMenu }: MenuProps): JSX.El
                   <button
                     disabled={isPending}
                     type="button"
-                    className="w-full bg-accent-1 p-3 text-left text-sm text-white hover:bg-opacity-50"
+                    className="w-full bg-accent-1 p-3 text-left text-xs text-white hover:bg-black"
                     onClick={handleSignOut}
                   >
                     {isPending ? 'Loading...' : 'Sign out'}
@@ -164,15 +167,18 @@ const MenuMobile = ({ user, isLoading, isOpenMenu }: MenuProps): JSX.Element => 
             className="flex flex-row items-center justify-start gap-x-3"
           >
             {user.profile_photo ? (
-              <Image
-                priority
-                src={user.profile_photo}
-                className="h-[2.5rem] w-[2.5rem] rounded-full bg-accent-2 object-cover"
-                alt="cover_image"
-                width={1000}
-                height={1000}
-                quality={100}
-              />
+              <div className="relative flex h-[2.5rem] w-[2.5rem] overflow-hidden rounded-full">
+                <LegacyImage
+                  priority
+                  layout="fill"
+                  src={user.profile_photo}
+                  blurDataURL={user.profile_photo}
+                  className="bg-black object-cover"
+                  alt="profile_image"
+                  placeholder="blur"
+                  quality={100}
+                />
+              </div>
             ) : (
               <div className="flex h-[2.5rem] w-[2.5rem] flex-row items-center justify-center rounded-full bg-black object-cover">
                 <svg
