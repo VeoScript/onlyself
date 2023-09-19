@@ -32,6 +32,12 @@ const SettingsModal = (): JSX.Element => {
   const [updateAccountFormErrors, setUpdateAccountFormErrors] = useState<any>(null);
   const [changePasswordFormErrors, setChangePasswordFormErrors] = useState<any>(null);
 
+  // profile and cover photo preview-images states...
+  const [previewProfileImage, setPreviewProfileImage] = useState<any>(null);
+  const [imageProfileUploaded, setImageProfileUploaded] = useState<any>(null);
+  const [previewCoverImage, setPreviewCoverImage] = useState<any>(null);
+  const [imageCoverUploaded, setImageCoverUploaded] = useState<any>(null);
+
   // profile settings states...
   const [coverPhoto, setCoverPhoto] = useState<string | null>('');
   const [profilePhoto, setProfilePhoto] = useState<string | null>('');
@@ -78,16 +84,127 @@ const SettingsModal = (): JSX.Element => {
     }
   }, [user]);
 
+  const handleUpdateProfileImage = (e: any) => {
+    try {
+      setImageProfileUploaded(e.target.files[0]);
+
+      var file = e.target.files[0];
+      var reader = new FileReader();
+      var allowedExtensions = /(\.jpg|\.jpeg|\.jfif|\.png)$/i;
+
+      if (e.target.value !== '' && !allowedExtensions.exec(e.target.value)) {
+        e.target.value = '';
+        setImageProfileUploaded('');
+        toast.error('Please select jpg, jpeg or png only!');
+        return;
+      }
+
+      if (e.target.files[0].size > 2097152) {
+        setImageProfileUploaded('');
+        setPreviewProfileImage('');
+        toast.error('Selected photo size exceeds 2 MB. Choose another one.');
+        return;
+      }
+
+      reader.onloadend = function () {
+        setPreviewProfileImage(reader.result);
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
+      } else {
+        setPreviewProfileImage('');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleUpdateCoverImage = (e: any) => {
+    try {
+      setImageCoverUploaded(e.target.files[0]);
+
+      var file = e.target.files[0];
+      var reader = new FileReader();
+      var allowedExtensions = /(\.jpg|\.jpeg|\.jfif|\.png)$/i;
+
+      if (e.target.value !== '' && !allowedExtensions.exec(e.target.value)) {
+        e.target.value = '';
+        setImageCoverUploaded('');
+        toast.error('Please select jpg, jpeg or png only!');
+        return;
+      }
+
+      if (e.target.files[0].size > 2097152) {
+        setImageCoverUploaded('');
+        setPreviewCoverImage('');
+        toast.error('Selected photo size exceeds 2 MB. Choose another one.');
+        return;
+      }
+
+      reader.onloadend = function () {
+        setPreviewCoverImage(reader.result);
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
+      } else {
+        setPreviewCoverImage('');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleUpdateAccount = async (): Promise<void> => {
     try {
       await updateAccountValidation.validate({ name, username, email }, { abortEarly: false });
 
       setIsPendingProfile(true);
 
+      let toUploadProfileImage = null;
+      let toUploadCoverImage = null;
+
+      // check if the profile photo is changed...
+      if (imageProfileUploaded) {
+        const profilePhoto = new FormData();
+        profilePhoto.append('image', imageProfileUploaded);
+
+        await fetch(`https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`, {
+          method: 'POST',
+          body: profilePhoto,
+        })
+          .then((response) => response.json())
+          .then(async (result) => {
+            toUploadProfileImage = result.data.url;
+          })
+          .catch(() => {
+            toast.error('Profile photo upload failed. Try again.');
+          });
+      }
+
+      // check if the cover photo is changed...
+      if (imageCoverUploaded) {
+        const coverPhoto = new FormData();
+        coverPhoto.append('image', imageCoverUploaded);
+
+        await fetch(`https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`, {
+          method: 'POST',
+          body: coverPhoto,
+        })
+          .then((response) => response.json())
+          .then(async (result) => {
+            toUploadCoverImage = result.data.url;
+          })
+          .catch(() => {
+            toast.error('Profile photo upload failed. Try again.');
+          });
+      }
+
       await updateProfileMutation.mutateAsync(
         {
-          profile_photo: profilePhoto as string,
-          cover_photo: coverPhoto as string,
+          profile_photo: toUploadProfileImage as unknown as string,
+          cover_photo: toUploadCoverImage as unknown as string,
           name,
           username,
           email,
@@ -99,6 +216,7 @@ const SettingsModal = (): JSX.Element => {
           },
           onSuccess: () => {
             setIsPendingProfile(false);
+            setImageProfileUploaded(null);
             toast.success('Updated successfully.');
           },
         },
@@ -229,15 +347,15 @@ const SettingsModal = (): JSX.Element => {
               <div className="flex w-full flex-col items-start gap-y-3 px-3 pb-3">
                 <div
                   style={{
-                    backgroundImage: `url(${coverPhoto})`,
+                    backgroundImage: `url(${previewCoverImage ?? coverPhoto})`,
                   }}
                   className="relative flex w-full flex-col items-center overflow-hidden rounded-xl bg-neutral-800 bg-center bg-no-repeat p-2"
                 >
                   <div className="relative flex">
-                    {profilePhoto ? (
+                    {previewProfileImage ? (
                       <Image
                         priority
-                        src={profilePhoto as string}
+                        src={previewProfileImage as string}
                         className="h-[10rem] w-[10rem] rounded-full bg-black object-cover"
                         alt="profile_image"
                         width={1000}
@@ -245,27 +363,41 @@ const SettingsModal = (): JSX.Element => {
                         quality={100}
                       />
                     ) : (
-                      <div className="flex h-[10rem] w-[10rem] flex-row items-center justify-center rounded-full bg-black object-cover">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-[5rem] w-[5rem] text-white"
-                        >
-                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                          <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                      </div>
+                      <>
+                        {profilePhoto ? (
+                          <Image
+                            priority
+                            src={profilePhoto as string}
+                            className="h-[10rem] w-[10rem] rounded-full bg-black object-cover"
+                            alt="profile_image"
+                            width={1000}
+                            height={1000}
+                            quality={100}
+                          />
+                        ) : (
+                          <div className="flex h-[10rem] w-[10rem] flex-row items-center justify-center rounded-full bg-black object-cover">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="h-[5rem] w-[5rem] text-white"
+                            >
+                              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                              <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                          </div>
+                        )}
+                      </>
                     )}
-                    <button
-                      type="button"
-                      className="absolute bottom-1 right-1 rounded-full bg-black bg-opacity-50 p-2 outline-none hover:bg-opacity-20"
+                    <label
+                      htmlFor="uploadProfile"
+                      className="absolute bottom-1 right-3 cursor-pointer rounded-full bg-black bg-opacity-50 p-2 outline-none hover:bg-opacity-20"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -281,11 +413,18 @@ const SettingsModal = (): JSX.Element => {
                           d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
                         />
                       </svg>
-                    </button>
+                    </label>
+                    <input
+                      type="file"
+                      id="uploadProfile"
+                      className="hidden"
+                      onChange={handleUpdateProfileImage}
+                      accept=".jpg, .png, .jpeg, .jfif"
+                    />
                   </div>
-                  <button
-                    type="button"
-                    className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-2 outline-none hover:bg-opacity-20"
+                  <label
+                    htmlFor="uploadCover"
+                    className="absolute right-1 top-1 cursor-pointer rounded-full bg-black bg-opacity-50 p-2 outline-none hover:bg-opacity-20"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -301,7 +440,14 @@ const SettingsModal = (): JSX.Element => {
                         d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
                       />
                     </svg>
-                  </button>
+                  </label>
+                  <input
+                    type="file"
+                    id="uploadCover"
+                    className="hidden"
+                    onChange={handleUpdateCoverImage}
+                    accept=".jpg, .png, .jpeg, .jfif"
+                  />
                 </div>
                 <div className="flex w-full flex-row items-start justify-center gap-x-2">
                   <div className="flex w-full flex-col items-start gap-y-1">
