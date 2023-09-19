@@ -45,7 +45,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       <QueryClientProvider client={queryClient}>
         <Toaster position="top-center" reverseOrder={false} />
         <Component {...pageProps} />
-        <Tooltip id="onlyself-tooltip" />
+        <Tooltip id="onlyself-tooltip" style={{ zIndex: 9999 }} />
       </QueryClientProvider>
     </>
   );

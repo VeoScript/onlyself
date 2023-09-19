@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import Image from 'next/image';
+import LegacyImage from 'next/legacy/image';
 import { LogoProfile } from '~/components/atoms/Logo';
 import Loading from '~/components/molecules/Loading';
 import BottomBar from '~/components/organisms/BottomBar';
@@ -17,6 +17,7 @@ import {
   filesModalStore,
   settingsModalStore,
 } from '~/helpers/stores/modals';
+import { uploadProfileStore, uploadCoverStore } from '~/helpers/stores/upload';
 import { useGetUser } from '~/helpers/tanstack/queries/user';
 import { useGetProfile } from '~/helpers/tanstack/queries/profile';
 
@@ -30,13 +31,12 @@ const Profile = (): JSX.Element => {
   const { isOpen: isOpenFilesModal, setIsOpen: setIsOpenFilesModal } = filesModalStore();
   const { isOpen: isOpenSettingsModal, setIsOpen: setIsOpenSettingsModal } = settingsModalStore();
 
+  const { setDefault: setDefaultUploadProfile } = uploadProfileStore();
+  const { setDefault: setDefaultUploadCover } = uploadCoverStore();
+
   const { data: user } = useGetUser();
 
-  const {
-    data: profile,
-    isLoading: isLoadingProfile,
-    error: errorProfile,
-  } = useGetProfile(username as string);
+  const { data: profile, isLoading: isLoadingProfile } = useGetProfile(username as string);
 
   if (isLoadingProfile) return <Loading />;
 
@@ -53,7 +53,7 @@ const Profile = (): JSX.Element => {
           </Head>
           <div className="flex h-full w-full flex-row items-start overflow-hidden bg-white font-poppins selection:bg-blue-300">
             <div className="relative flex h-screen w-full max-w-full flex-col overflow-hidden">
-              <div className="absolute top-5 z-20 flex w-full flex-row items-center justify-between px-3 md:px-10">
+              <div className="absolute top-5 z-[9999] flex w-full flex-row items-center justify-between px-3 md:px-10">
                 <LogoProfile />
                 <button
                   data-tooltip-id="onlyself-tooltip"
@@ -61,6 +61,9 @@ const Profile = (): JSX.Element => {
                   className="rounded-full bg-white bg-opacity-20 p-2 outline-none backdrop-blur-sm hover:opacity-50"
                   type="button"
                   onClick={() => {
+                    setDefaultUploadProfile();
+                    setDefaultUploadCover();
+
                     if (isOpenDiscoverModal) return setIsOpenDiscoverModal(false);
                     if (isOpenMessagesModal) return setIsOpenMessagesModal(false);
                     if (isOpenFilesModal) return setIsOpenFilesModal(false);
@@ -85,33 +88,36 @@ const Profile = (): JSX.Element => {
                   </svg>
                 </button>
               </div>
-              <div className="absolute inset-0 h-full w-full bg-black bg-opacity-30 backdrop-blur-sm" />
+              <div className="absolute inset-0 z-10 h-full w-full bg-black bg-opacity-30 backdrop-blur-sm" />
               {profile.cover_photo ? (
-                <Image
+                <LegacyImage
                   priority
+                  layout="fill"
                   src={profile.cover_photo}
+                  blurDataURL={profile.cover_photo}
                   className="h-full w-full bg-accent-3 object-cover"
                   alt="cover_image"
-                  width={500}
-                  height={500}
+                  placeholder="blur"
                   quality={80}
                 />
               ) : (
                 <div className="h-full w-full bg-accent-3 object-cover" />
               )}
-              <div className="absolute flex h-full w-full flex-col items-center justify-start gap-y-3 overflow-y-auto pb-24">
+              <div className="absolute z-20 flex h-full w-full flex-col items-center justify-start gap-y-3 overflow-y-auto pb-24">
                 {profile.profile_photo ? (
-                  <Image
-                    priority
-                    src={profile.profile_photo}
-                    className="h-[7rem] w-[7rem] rounded-b-3xl bg-black object-cover md:h-[13rem] md:w-[15rem]"
-                    alt="profile_image"
-                    width={1000}
-                    height={1000}
-                    quality={100}
-                    data-aos="fade-down"
-                    data-aos-delay="400"
-                  />
+                  <div className="relative flex h-[7rem] w-[7rem] overflow-hidden rounded-b-3xl md:h-[13rem] md:w-[15rem]">
+                    <LegacyImage
+                      priority
+                      layout="fill"
+                      objectFit="cover"
+                      src={profile.profile_photo}
+                      blurDataURL={profile.profile_photo}
+                      className="h-full w-full bg-black object-cover"
+                      alt="cover_image"
+                      placeholder="blur"
+                      quality={100}
+                    />
+                  </div>
                 ) : (
                   <div className="flex h-[7rem] w-[7rem] flex-row items-center justify-center rounded-b-3xl bg-black object-cover md:h-[13rem] md:w-[15rem]">
                     <svg
