@@ -20,7 +20,7 @@ const DiscoverModal = (): JSX.Element => {
       className={clsx(
         isOpen ? 'scale-y-100' : 'scale-y-0',
         router.pathname === '/' ? 'pt-3' : 'pt-[4rem]',
-        'fixed inset-0 z-10 flex h-full w-full origin-bottom transform flex-col items-center justify-center bg-black bg-opacity-50 px-3 pb-3 backdrop-blur-xl transition duration-300 md:pt-3',
+        'fixed inset-0 z-40 flex h-full w-full origin-bottom transform flex-col items-center justify-center bg-black bg-opacity-50 px-3 pb-3 backdrop-blur-xl transition duration-300 md:pt-3',
       )}
     >
       <div className="absolute h-full w-full flex-1 cursor-default bg-transparent outline-none" />
@@ -78,7 +78,7 @@ const DiscoverModal = (): JSX.Element => {
                 autoComplete="off"
                 type="text"
                 id="search_people"
-                placeholder='Search people by name'
+                placeholder="Search people by name"
                 value={search}
                 onChange={(e) => setSearch(e.currentTarget.value)}
               />

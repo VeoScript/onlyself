@@ -42,14 +42,14 @@ const Home = (): JSX.Element => {
           >
             <button
               type="button"
-              className="w-[6rem] rounded-xl bg-accent-1 px-3 py-3 text-center text-sm text-white hover:bg-opacity-50 md:w-[10rem] md:px-5"
+              className="w-auto rounded-xl bg-accent-1 px-3 py-3 text-center text-sm text-white hover:bg-opacity-50 md:w-[10rem] md:px-5"
               onClick={() => setIsOpenDiscoverModal(true)}
             >
               Discover
             </button>
             <Link
               href={user ? '/pricing' : '/signin'}
-              className="w-[6rem] rounded-xl bg-accent-2 px-3 py-3 text-center text-sm text-accent-3 hover:bg-opacity-50 md:w-[10rem] md:px-5"
+              className="w-auto rounded-xl bg-accent-2 px-3 py-3 text-center text-sm text-accent-3 hover:bg-opacity-50 md:w-[10rem] md:px-5"
             >
               {user ? 'Subscription' : 'Sign In'}
             </Link>

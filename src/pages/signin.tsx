@@ -82,7 +82,7 @@ const SignIn = (): JSX.Element => {
                 </label>
                 <input
                   className="w-full rounded-xl border border-accent-3 bg-accent-1 p-3 text-sm text-accent-3 outline-none focus:border-accent-2"
-                  type="text"
+                  type="email"
                   id="email"
                   value={email}
                   onChange={(e) => {
