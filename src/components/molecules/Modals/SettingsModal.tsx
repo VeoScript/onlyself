@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import Image from 'next/image';
+import LegacyImage from 'next/legacy/image';
 import ActivityIndicator from '~/components/atoms/ActivityIndicator';
 
 import { Switch } from '@headlessui/react';
 import { toast } from 'react-hot-toast';
 import { updateAccountValidation, updatePasswordValidation } from '~/helpers/hooks/useValidation';
 import { settingsModalStore } from '~/helpers/stores/modals';
+import { uploadProfileStore, uploadCoverStore } from '~/helpers/stores/upload';
 import { useGetUser } from '~/helpers/tanstack/queries/user';
 import { useUpdateProfileMutation } from '~/helpers/tanstack/mutations/account/update-profile';
 import { useUpdatePrivacyOptionsMutation } from '~/helpers/tanstack/mutations/account/update-privacy';
@@ -22,6 +23,10 @@ const SettingsModal = (): JSX.Element => {
   const updatePasswordMutation = useUpdatePasswordMutation();
 
   const { isOpen, setIsOpen } = settingsModalStore();
+  const {imageProfileUploaded, previewProfileImage, setImageProfileUploaded, setPreviewProfileImage} = uploadProfileStore();
+  const {imageCoverUploaded, previewCoverImage, setImageCoverUploaded, setPreviewCoverImage} = uploadCoverStore();
+
+  console.log("imageCoverUploaded", imageCoverUploaded)
 
   // buttons loading states...
   const [isPendingProfile, setIsPendingProfile] = useState<boolean>(false);
@@ -31,12 +36,6 @@ const SettingsModal = (): JSX.Element => {
   // settings errors states...
   const [updateAccountFormErrors, setUpdateAccountFormErrors] = useState<any>(null);
   const [changePasswordFormErrors, setChangePasswordFormErrors] = useState<any>(null);
-
-  // profile and cover photo preview-images states...
-  const [previewProfileImage, setPreviewProfileImage] = useState<any>(null);
-  const [imageProfileUploaded, setImageProfileUploaded] = useState<any>(null);
-  const [previewCoverImage, setPreviewCoverImage] = useState<any>(null);
-  const [imageCoverUploaded, setImageCoverUploaded] = useState<any>(null);
 
   // profile settings states...
   const [coverPhoto, setCoverPhoto] = useState<string | null>('');
@@ -328,7 +327,7 @@ const SettingsModal = (): JSX.Element => {
     <div
       className={clsx(
         isOpen ? 'scale-y-100' : 'scale-y-0',
-        'fixed inset-0 z-10 flex h-full w-full origin-bottom transform flex-col items-center justify-center bg-black bg-opacity-50 px-3 pb-3 pt-[4rem] backdrop-blur-xl transition duration-300 md:pt-3',
+        'fixed inset-0 z-40 flex h-full w-full origin-bottom transform flex-col items-center justify-center bg-black bg-opacity-50 px-3 pb-3 pt-[4rem] backdrop-blur-xl transition duration-300 md:pt-3',
       )}
     >
       <div className="absolute h-full w-full flex-1 cursor-default bg-transparent outline-none" />
@@ -349,31 +348,35 @@ const SettingsModal = (): JSX.Element => {
                   style={{
                     backgroundImage: `url(${previewCoverImage ?? coverPhoto})`,
                   }}
-                  className="relative flex w-full flex-col items-center overflow-hidden rounded-xl bg-neutral-800 bg-center bg-no-repeat p-2"
+                  className="relative flex w-full flex-col items-center overflow-hidden rounded-xl bg-neutral-800 bg-cover bg-center bg-no-repeat p-2"
                 >
                   <div className="relative flex">
                     {previewProfileImage ? (
-                      <Image
-                        priority
-                        src={previewProfileImage as string}
-                        className="h-[10rem] w-[10rem] rounded-full bg-black object-cover"
-                        alt="profile_image"
-                        width={1000}
-                        height={1000}
-                        quality={100}
-                      />
+                      <div className="relative flex h-[10rem] w-[10rem] overflow-hidden rounded-full">
+                        <LegacyImage
+                          priority
+                          layout="fill"
+                          src={previewProfileImage as string}
+                          className="bg-black object-cover"
+                          alt="profile_image"
+                          quality={100}
+                        />
+                      </div>
                     ) : (
                       <>
                         {profilePhoto ? (
-                          <Image
-                            priority
-                            src={profilePhoto as string}
-                            className="h-[10rem] w-[10rem] rounded-full bg-black object-cover"
-                            alt="profile_image"
-                            width={1000}
-                            height={1000}
-                            quality={100}
-                          />
+                          <div className="relative flex h-[10rem] w-[10rem] overflow-hidden rounded-full">
+                            <LegacyImage
+                              priority
+                              layout="fill"
+                              src={profilePhoto as string}
+                              blurDataURL={profilePhoto as string}
+                              className="bg-black object-cover"
+                              alt="profile_image"
+                              placeholder="blur"
+                              quality={100}
+                            />
+                          </div>
                         ) : (
                           <div className="flex h-[10rem] w-[10rem] flex-row items-center justify-center rounded-full bg-black object-cover">
                             <svg
