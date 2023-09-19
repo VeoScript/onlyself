@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Router from 'next/router';
 import ActivityIndicator from '../atoms/ActivityIndicator';
 import {
   discoverModalStore,
@@ -19,8 +20,8 @@ const BottomBar = (): JSX.Element => {
   const { setIsOpen: setIsOpenSettingsModal } = settingsModalStore();
 
   return (
-    <div className="absolute bottom-5 flex w-full justify-center">
-      <div className="flex w-auto flex-row items-center justify-center gap-x-2 overflow-hidden rounded-xl bg-neutral-600 bg-opacity-20 p-2 backdrop-blur-sm">
+    <div className="absolute bottom-5 z-20 flex w-full justify-center px-0 md:px-3">
+      <div className="flex w-auto flex-row items-center justify-center gap-x-2 overflow-hidden rounded-xl bg-black bg-opacity-20 p-2 backdrop-blur-sm">
         {isLoadingUser ? (
           <div className="flex w-full flex-row items-center px-5 py-2">
             <ActivityIndicator className="h-6 w-6" />
@@ -33,11 +34,34 @@ const BottomBar = (): JSX.Element => {
                   <Link href="/signin" className="text-accent-2 hover:underline">
                     Sign in
                   </Link>{' '}
-                  to discover, connect and share to everyone. 
+                  to discover, connect and share to everyone.
                 </h1>
               </div>
             ) : (
               <>
+                <button
+                  data-tooltip-id="onlyself-tooltip"
+                  data-tooltip-content="My Profile"
+                  className="rounded-xl bg-white bg-opacity-20 p-2 outline-none backdrop-blur-sm transition duration-200 ease-in-out hover:scale-110 hover:bg-opacity-10"
+                  type="button"
+                  onClick={() => Router.push(`/${user.username}`)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-6 w-6 text-white"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </button>
                 <button
                   data-tooltip-id="onlyself-tooltip"
                   data-tooltip-content="Discover"
