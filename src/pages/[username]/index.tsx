@@ -200,7 +200,7 @@ const Profile = (): JSX.Element => {
                       isAuth={user ? true : false}
                       receiveFilesAnonymous={profile.is_receive_files_anonymous}
                       receiveImageAnonymous={profile.is_receive_images_anonymous}
-                      senderProfile={profile.profile_photo}
+                      senderProfile={user?.profile_photo ?? ''}
                       userUsername={user?.username ?? ''}
                       profileId={profile.id}
                     />
