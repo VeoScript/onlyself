@@ -11,6 +11,7 @@ import {
 
 import { useGetUser } from '~/helpers/tanstack/queries/user';
 import { useGetCountUnread } from '~/helpers/tanstack/queries/messages/count-unread';
+import { useReadAllMessagesMutation } from '~/helpers/tanstack/mutations/message/read-all-messages';
 
 const BottomBar = (): JSX.Element => {
   const { data: user, isLoading: isLoadingUser } = useGetUser();
@@ -21,7 +22,11 @@ const BottomBar = (): JSX.Element => {
   const { setIsOpen: setIsOpenFilesModal } = filesModalStore();
   const { setIsOpen: setIsOpenSettingsModal } = settingsModalStore();
 
-  console.log('unreadMessages', unreadMessages);
+  const readAllMessagesMutation = useReadAllMessagesMutation();
+
+  const handleReadAllMessages = async () => {
+    await readAllMessagesMutation.mutateAsync();
+  };
 
   return (
     <div className="absolute bottom-5 z-20 flex w-full justify-center px-0 md:px-3">
@@ -94,7 +99,10 @@ const BottomBar = (): JSX.Element => {
                   data-tooltip-content="Messages"
                   className="relative rounded-xl bg-white bg-opacity-20 p-2 outline-none backdrop-blur-sm transition duration-200 ease-in-out hover:scale-110 hover:bg-opacity-10"
                   type="button"
-                  onClick={() => setIsOpenMessagesModal(true)}
+                  onClick={() => {
+                    setIsOpenMessagesModal(true);
+                    handleReadAllMessages();
+                  }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
