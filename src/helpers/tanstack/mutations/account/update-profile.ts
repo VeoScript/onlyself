@@ -9,6 +9,7 @@ export const useUpdateProfileMutation = () => {
       profile_photo: string;
       cover_photo: string;
       short_bio: string;
+      favorite_quote: string;
       name: string;
       username: string;
       email: string;

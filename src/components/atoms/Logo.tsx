@@ -1,7 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 
-import { discoverModalStore, messageModalStore, filesModalStore, settingsModalStore } from '~/helpers/stores/modals';
+import {
+  discoverModalStore,
+  messageModalStore,
+  filesModalStore,
+  settingsModalStore,
+} from '~/helpers/stores/modals';
 
 const LogoDefault = (): JSX.Element => {
   return (

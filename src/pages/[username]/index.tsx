@@ -105,14 +105,14 @@ const Profile = (): JSX.Element => {
               )}
               <div className="absolute z-20 flex h-full w-full flex-col items-center justify-start gap-y-3 overflow-y-auto pb-24">
                 {profile.profile_photo ? (
-                  <div className="relative flex h-[7rem] w-[7rem] overflow-hidden rounded-b-3xl md:h-[13rem] md:w-[15rem]">
+                  <div className="relative flex min-h-[7rem] min-w-[7rem] overflow-hidden rounded-b-3xl md:min-h-[13rem] md:min-w-[15rem]">
                     <LegacyImage
                       priority
                       layout="fill"
                       objectFit="cover"
                       src={profile.profile_photo}
                       blurDataURL={profile.profile_photo}
-                      className="h-full w-full bg-black object-cover"
+                      className="h-full w-full  bg-black object-cover"
                       alt="cover_image"
                       placeholder="blur"
                       quality={100}
@@ -164,17 +164,42 @@ const Profile = (): JSX.Element => {
                         website_link={profile.website_link}
                       />
                     )}
-                    {profile.short_bio && (
+                    {profile.short_bio ? (
                       <h2 className="text-center text-sm font-light text-white">
                         {profile.short_bio}
                       </h2>
+                    ) : (
+                      <>
+                        {user?.id === profile.id && (
+                          <q className="text-center text-sm font-medium italic text-white">
+                            Go to settings <span className="not-italic">⚙️</span> add your short
+                            bio.
+                          </q>
+                        )}
+                      </>
+                    )}
+                    {profile.favorite_quote ? (
+                      <q className="mt-5 text-center text-base font-medium italic text-white">
+                        {profile.favorite_quote}
+                      </q>
+                    ) : (
+                      <>
+                        {user?.id === profile.id && (
+                          <q className="mt-5 text-center text-sm font-medium italic text-white">
+                            Go to settings <span className="not-italic">⚙️</span> add your favorite
+                            quote.
+                          </q>
+                        )}
+                      </>
                     )}
                   </div>
-                  <MessageInputText
-                    isAuth={user ? true : false}
-                    receiveFilesAnonymous={profile.is_receive_files_anonymous}
-                    receoveImageAnonymous={profile.is_receive_images_anonymous}
-                  />
+                  {user?.id !== profile.id && (
+                    <MessageInputText
+                      isAuth={user ? true : false}
+                      receiveFilesAnonymous={profile.is_receive_files_anonymous}
+                      receoveImageAnonymous={profile.is_receive_images_anonymous}
+                    />
+                  )}
                 </div>
               </div>
               <BottomBar />

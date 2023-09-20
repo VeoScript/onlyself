@@ -10,7 +10,7 @@ export default withIronSessionApiRoute(
 
       if (!req.session.user) return res.status(403).json('NOT AUTHENTICATED');
 
-      const { profile_photo, cover_photo, name, username, email, short_bio } = req.body;
+      const { profile_photo, cover_photo, name, username, email, short_bio, favorite_quote } = req.body;
 
       // upload/change profile photo...
       if (profile_photo) {
@@ -46,6 +46,7 @@ export default withIronSessionApiRoute(
           username,
           email,
           short_bio,
+          favorite_quote,
         },
       });
 
