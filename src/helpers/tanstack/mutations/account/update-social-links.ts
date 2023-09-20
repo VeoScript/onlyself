@@ -19,6 +19,7 @@ export const useUpdateSocialLinksMutation = () => {
       },
       onSuccess: async (data) => {
         queryClient.invalidateQueries(['user']);
+        queryClient.invalidateQueries(['users']);
         queryClient.invalidateQueries(['profile']);
         Router.push(`/${data.data.username}`);
       },

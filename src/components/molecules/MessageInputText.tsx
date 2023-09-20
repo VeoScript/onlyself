@@ -10,18 +10,16 @@ interface MessageInputTextProps {
   isAuth: boolean;
   receiveFilesAnonymous: boolean;
   receiveImageAnonymous: boolean;
-  senderProfile: string;
-  userUsername: string;
-  profileId: string;
+  senderId: string;
+  receiverId: string;
 }
 
 const MessageInputText = ({
   isAuth,
   receiveFilesAnonymous,
   receiveImageAnonymous,
-  senderProfile,
-  userUsername,
-  profileId,
+  senderId,
+  receiverId,
 }: MessageInputTextProps): JSX.Element => {
   const createMessageMutation = useCreateMessageMutation();
 
@@ -31,7 +29,7 @@ const MessageInputText = ({
   const [messageContent, setMessageContent] = useState<string>('');
 
   const setDefault = () => {
-    setIsAnonymous(true);
+    setIsPending(false);
     setMessageContent('');
   };
 
@@ -44,9 +42,8 @@ const MessageInputText = ({
       {
         is_anonymous: isAnonymous,
         content: messageContent,
-        sender_profile: senderProfile,
-        sender: isAnonymous ? 'Anonymous' : userUsername,
-        receiver_id: profileId,
+        sender_id: senderId,
+        receiver_id: receiverId,
       },
       {
         onError: (error) => {
@@ -55,7 +52,6 @@ const MessageInputText = ({
         },
         onSuccess: () => {
           toast.success('Message sent successfully.');
-          setIsPending(false);
           setDefault();
         },
       },
@@ -85,13 +81,13 @@ const MessageInputText = ({
               checked={isAnonymous}
               onChange={() => setIsAnonymous(!isAnonymous)}
               className={clsx(
-                isAnonymous ? 'bg-blue-600' : 'bg-gray-200',
+                isAnonymous ? 'bg-green-500' : 'bg-gray-200',
                 'relative inline-flex h-6 w-11 items-center rounded-full',
               )}
             >
               <span
                 className={clsx(
-                  isAnonymous ? 'translate-x-6 bg-white' : 'translate-x-1 bg-blue-600',
+                  isAnonymous ? 'translate-x-6 bg-white' : 'translate-x-1 bg-green-500',
                   'inline-block h-4 w-4 transform rounded-full transition',
                 )}
               />
@@ -104,6 +100,7 @@ const MessageInputText = ({
         rows={5}
         cols={40}
         spellCheck={false}
+        placeholder="Write some short message..."
         value={messageContent}
         onChange={(e) => setMessageContent(e.currentTarget.value)}
         onKeyDown={onEnterPress}

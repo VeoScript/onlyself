@@ -28,7 +28,7 @@ const SocialMediaHolder = ({
     <div className="my-3 flex flex-row items-center gap-x-3">
       {facebook_link && (
         <Link
-          href={facebook_link}
+          href={`https://www.facebook.com/${facebook_link}`}
           target="_blank"
           data-tooltip-id="onlyself-tooltip"
           data-tooltip-content="Facebook"
@@ -45,7 +45,7 @@ const SocialMediaHolder = ({
       )}
       {instagram_link && (
         <Link
-          href={instagram_link}
+          href={`https://www.instagram.com/${instagram_link}`}
           target="_blank"
           data-tooltip-id="onlyself-tooltip"
           data-tooltip-content="Instagram"
@@ -62,7 +62,7 @@ const SocialMediaHolder = ({
       )}
       {twitterx_link && (
         <Link
-          href={twitterx_link}
+          href={`https://twitter.com/${twitterx_link}`}
           target="_blank"
           data-tooltip-id="onlyself-tooltip"
           data-tooltip-content="Twitter/X"
@@ -79,7 +79,7 @@ const SocialMediaHolder = ({
       )}
       {linkedin_link && (
         <Link
-          href={linkedin_link}
+          href={`https://www.linkedin.com/in/${linkedin_link}`}
           target="_blank"
           data-tooltip-id="onlyself-tooltip"
           data-tooltip-content="LinkedIn"
@@ -96,7 +96,7 @@ const SocialMediaHolder = ({
       )}
       {github_link && (
         <Link
-          href={github_link}
+          href={`https://github.com/${github_link}`}
           target="_blank"
           data-tooltip-id="onlyself-tooltip"
           data-tooltip-content="Github"

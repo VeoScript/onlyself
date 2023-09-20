@@ -149,7 +149,9 @@ const Profile = (): JSX.Element => {
                       {profile.is_display_name ? profile.name : `@${profile.username}`}
                     </h1>
                     {profile.is_display_name && (
-                      <h1 className="text-base font-medium text-neutral-300">@{profile.username}</h1>
+                      <h1 className="text-base font-medium text-neutral-300">
+                        @{profile.username}
+                      </h1>
                     )}
                     {(profile.facebook_link ||
                       profile.instagram_link ||
@@ -200,9 +202,8 @@ const Profile = (): JSX.Element => {
                       isAuth={user ? true : false}
                       receiveFilesAnonymous={profile.is_receive_files_anonymous}
                       receiveImageAnonymous={profile.is_receive_images_anonymous}
-                      senderProfile={user?.profile_photo ?? ''}
-                      userUsername={user?.username ?? ''}
-                      profileId={profile.id}
+                      senderId={user?.id ?? ''}
+                      receiverId={profile.id}
                     />
                   )}
                 </div>
@@ -211,7 +212,7 @@ const Profile = (): JSX.Element => {
             </div>
           </div>
           <DiscoverModal />
-          <MessagesModal />
+          <MessagesModal username={user?.username ?? ''} />
           <FilesModal />
           <SettingsModal />
         </>

@@ -14,7 +14,7 @@ export default withIronSessionApiRoute(
 
       const message = await prisma.message.deleteMany({
         where: {
-          user: {
+          receiver: {
             username,
           },
         },

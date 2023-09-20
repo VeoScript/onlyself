@@ -7,8 +7,7 @@ export const useCreateMessageMutation = () => {
     (args: {
       is_anonymous: boolean;
       content: string;
-      sender_profile: string;
-      sender: string;
+      sender_id: string;
       receiver_id: string;
     }) => axios.post('/api/message/create', args),
     {

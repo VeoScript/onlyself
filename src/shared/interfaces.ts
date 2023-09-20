@@ -24,10 +24,16 @@ export interface MessageProps {
   is_read: boolean;
   is_anonymous: boolean;
   content: string;
-  sender: string;
-  sender_profile: string;
   created_at: string;
   updated_at: string;
-  user_id: string;
-  user: any[];
+  sender: {
+    id: string;
+    profile_photo: string;
+    username: string;
+  };
+  receiver: {
+    id: string;
+    profile_photo: string;
+    username: string;
+  };
 }
