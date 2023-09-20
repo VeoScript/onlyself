@@ -1,19 +1,63 @@
 import { useState } from 'react';
-import clsx from 'clsx';
+import { toast } from 'react-hot-toast';
 import { Switch } from '@headlessui/react';
+import clsx from 'clsx';
+import ActivityIndicator from '../atoms/ActivityIndicator';
+
+import { useCreateMessageMutation } from '~/helpers/tanstack/mutations/message/create-message';
 
 interface MessageInputTextProps {
   isAuth: boolean;
   receiveFilesAnonymous: boolean;
-  receoveImageAnonymous: boolean;
+  receiveImageAnonymous: boolean;
+  userUsername: string;
+  profileId: string;
 }
 
 const MessageInputText = ({
   isAuth,
   receiveFilesAnonymous,
-  receoveImageAnonymous,
+  receiveImageAnonymous,
+  userUsername,
+  profileId,
 }: MessageInputTextProps): JSX.Element => {
+  const createMessageMutation = useCreateMessageMutation();
+
+  const [isPending, setIsPending] = useState<boolean>(false);
+
   const [isAnonymous, setIsAnonymous] = useState<boolean>(true);
+  const [messageContent, setMessageContent] = useState<string>('');
+
+  const setDefault = () => {
+    setIsAnonymous(true);
+    setMessageContent('');
+  };
+
+  const handleSendMessage = async () => {
+    if (messageContent.trim() === '') return toast.error('Message is required.');
+
+    setIsPending(true);
+
+    await createMessageMutation.mutateAsync(
+      {
+        is_anonymous: isAnonymous,
+        content: messageContent,
+        sender: isAnonymous ? 'Anonymous' : userUsername,
+        receiver_id: profileId,
+      },
+      {
+        onError: (error) => {
+          setIsPending(false);
+          toast.error(error.response.data.message);
+        },
+        onSuccess: () => {
+          toast.success('Message sent successfully.');
+          setIsPending(false);
+          setDefault();
+        },
+      },
+    );
+  };
 
   return (
     <div
@@ -50,10 +94,12 @@ const MessageInputText = ({
         rows={5}
         cols={40}
         spellCheck={false}
+        value={messageContent}
+        onChange={(e) => setMessageContent(e.currentTarget.value)}
       />
       <div className="flex w-full flex-row items-center justify-between gap-x-1 bg-white bg-opacity-20 p-3 backdrop-blur-sm">
         <div className="flex flex-row items-center gap-x-1">
-          {receoveImageAnonymous && (
+          {receiveImageAnonymous && (
             <button
               type="button"
               className="flex flex-row items-center gap-x-1 rounded-xl border border-neutral-400 p-2 outline-none hover:opacity-50"
@@ -107,24 +153,30 @@ const MessageInputText = ({
         <button
           data-tooltip-id="onlyself-tooltip"
           data-tooltip-content="Send Message"
-          className="outline-none"
+          disabled={isPending}
           type="button"
+          className="outline-none"
+          onClick={handleSendMessage}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-6 w-6 text-white hover:opacity-50"
-          >
-            <line x1="22" y1="2" x2="11" y2="13" />
-            <polygon points="22 2 15 22 11 13 2 9 22 2" />
-          </svg>
+          {isPending ? (
+            <ActivityIndicator className="h-6 w-6" />
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-6 w-6 text-white hover:opacity-50"
+            >
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+          )}
         </button>
       </div>
     </div>

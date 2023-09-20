@@ -197,7 +197,9 @@ const Profile = (): JSX.Element => {
                     <MessageInputText
                       isAuth={user ? true : false}
                       receiveFilesAnonymous={profile.is_receive_files_anonymous}
-                      receoveImageAnonymous={profile.is_receive_images_anonymous}
+                      receiveImageAnonymous={profile.is_receive_images_anonymous}
+                      userUsername={user?.username ?? ''}
+                      profileId={profile.id}
                     />
                   )}
                 </div>
