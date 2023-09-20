@@ -47,6 +47,7 @@ const SettingsModal = (): JSX.Element => {
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [shortBio, setShortBio] = useState<string>('');
+  const [favoriteQuote, setFavoriteQuote] = useState<string>('');
 
   // privacy options states...
   const [displayName, setDisplayName] = useState<boolean>(false);
@@ -74,6 +75,7 @@ const SettingsModal = (): JSX.Element => {
       setUsername(user.username ?? '');
       setEmail(user.email ?? '');
       setShortBio(user.short_bio ?? '');
+      setFavoriteQuote(user.favorite_quote ?? '');
 
       setDisplayName(user.is_display_name);
       setReceiveFilesAnonymous(user.is_receive_files_anonymous);
@@ -210,6 +212,7 @@ const SettingsModal = (): JSX.Element => {
           profile_photo: toUploadProfileImage as unknown as string,
           cover_photo: toUploadCoverImage as unknown as string,
           short_bio: shortBio,
+          favorite_quote: favoriteQuote,
           name,
           username,
           email,
@@ -518,11 +521,23 @@ const SettingsModal = (): JSX.Element => {
                       setShortBio(e.currentTarget.value);
                     }}
                   />
-                  {updateAccountFormErrors && updateAccountFormErrors.email && (
-                    <span className="ml-2 mt-1 text-xs text-red-400">
-                      {updateAccountFormErrors.email}
-                    </span>
-                  )}
+                </div>
+                <div className="flex w-full flex-col items-start gap-y-1">
+                  <label className="ml-1 text-xs font-light" htmlFor="email">
+                    Favorite quote
+                  </label>
+                  <textarea
+                    className="w-full resize-none rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                    rows={5}
+                    cols={40}
+                    spellCheck={false}
+                    autoComplete="off"
+                    value={favoriteQuote}
+                    onChange={(e) => {
+                      setUpdateAccountFormErrors(null);
+                      setFavoriteQuote(e.currentTarget.value);
+                    }}
+                  />
                 </div>
                 <div className="flex w-full flex-col items-start gap-y-1">
                   <label className="ml-1 text-xs font-light" htmlFor="email">

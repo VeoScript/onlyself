@@ -20,6 +20,7 @@ export default withIronSessionApiRoute(
         username: true,
         email: true,
         short_bio: true,
+        favorite_quote: true,
         facebook_link: true,
         instagram_link: true,
         twitterx_link: true,

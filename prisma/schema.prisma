@@ -19,6 +19,7 @@ model User {
   email                       String    @unique
   password                    String
   short_bio                   String?
+  favorite_quote              String?
   facebook_link               String?
   instagram_link              String?
   twitterx_link               String?

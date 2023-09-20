@@ -6,6 +6,7 @@ export interface UserProps {
   username: string;
   email: string;
   short_bio: string,
+  favorite_quote: string,
   facebook_link: string;
   instagram_link: string;
   twitterx_link: string;

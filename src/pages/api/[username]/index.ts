@@ -18,6 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       username: true,
       email: true,
       short_bio: true,
+      favorite_quote: true,
       facebook_link: true,
       instagram_link: true,
       twitterx_link: true,
