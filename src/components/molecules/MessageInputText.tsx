@@ -10,6 +10,7 @@ interface MessageInputTextProps {
   isAuth: boolean;
   receiveFilesAnonymous: boolean;
   receiveImageAnonymous: boolean;
+  senderProfile: string;
   userUsername: string;
   profileId: string;
 }
@@ -18,6 +19,7 @@ const MessageInputText = ({
   isAuth,
   receiveFilesAnonymous,
   receiveImageAnonymous,
+  senderProfile,
   userUsername,
   profileId,
 }: MessageInputTextProps): JSX.Element => {
@@ -42,6 +44,7 @@ const MessageInputText = ({
       {
         is_anonymous: isAnonymous,
         content: messageContent,
+        sender_profile: senderProfile,
         sender: isAnonymous ? 'Anonymous' : userUsername,
         receiver_id: profileId,
       },

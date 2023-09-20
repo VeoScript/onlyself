@@ -5,8 +5,8 @@ export interface UserProps {
   name: string;
   username: string;
   email: string;
-  short_bio: string,
-  favorite_quote: string,
+  short_bio: string;
+  favorite_quote: string;
   facebook_link: string;
   instagram_link: string;
   twitterx_link: string;
@@ -17,4 +17,16 @@ export interface UserProps {
   is_receive_files_anonymous: boolean;
   is_receive_images_anonymous: boolean;
   created_at: string;
+}
+
+export interface MessageProps {
+  id: string;
+  content: string;
+  is_anonymous: string;
+  sender: string;
+  sender_profile: string;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+  user: any[];
 }

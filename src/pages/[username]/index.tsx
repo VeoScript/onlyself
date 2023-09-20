@@ -53,12 +53,14 @@ const Profile = (): JSX.Element => {
           </Head>
           <div className="flex h-full w-full flex-row items-start overflow-hidden bg-white font-poppins selection:bg-blue-300">
             <div className="relative flex h-screen w-full max-w-full flex-col overflow-hidden">
-              <div className="absolute top-5 z-[9999] flex w-full flex-row items-center justify-between px-3 md:px-10">
-                <LogoProfile />
+              <div className="relative flex w-full flex-row items-center justify-between">
+                <div className="absolute left-3 top-5 z-50 md:left-10">
+                  <LogoProfile />
+                </div>
                 <button
                   data-tooltip-id="onlyself-tooltip"
                   data-tooltip-content="Back"
-                  className="rounded-full bg-white bg-opacity-20 p-2 outline-none backdrop-blur-sm hover:opacity-50"
+                  className="absolute right-3 top-5 z-50 rounded-full bg-white bg-opacity-20 p-2 outline-none backdrop-blur-sm hover:opacity-50 md:right-10"
                   type="button"
                   onClick={() => {
                     setDefaultUploadProfile();
@@ -198,6 +200,7 @@ const Profile = (): JSX.Element => {
                       isAuth={user ? true : false}
                       receiveFilesAnonymous={profile.is_receive_files_anonymous}
                       receiveImageAnonymous={profile.is_receive_images_anonymous}
+                      senderProfile={profile.profile_photo}
                       userUsername={user?.username ?? ''}
                       profileId={profile.id}
                     />

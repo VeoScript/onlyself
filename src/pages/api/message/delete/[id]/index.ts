@@ -5,25 +5,26 @@ import prisma from '~/config/Prisma';
 export default withIronSessionApiRoute(
   async function handler(req: any, res: NextApiResponse) {
     try {
-      if (req.method !== 'POST') return res.status(500).json('INVALID REQUEST METHOD');
+      // DELETE SINGLE MESSAGE...
+      if (req.method !== 'DELETE') return res.status(500).json('INVALID REQUEST METHOD');
 
-      const { is_anonymous, content, sender_profile, sender, receiver_id } = req.body;
+      if (!req.session.user) return res.status(403).json('NOT AUTHENTICATED');
 
-      const message = await prisma.message.create({
-        data: {
-          is_anonymous,
-          content,
-          sender_profile: is_anonymous ? null : sender_profile,
-          sender: is_anonymous ? 'Anonymous' : sender,
-          user_id: receiver_id,
+      const { id } = req.query;
+
+      const message = await prisma.message.delete({
+        where: {
+          id,
         },
       });
 
       if (message) {
-        res.status(200).json(message);
+        res.status(200).json({
+          message: 'Message deleted successfully.',
+        });
       } else {
         return res.status(400).json({
-          message: 'Something wrong while sending a message.',
+          message: 'Something wrong while deleting a message.',
         });
       }
     } catch (error) {

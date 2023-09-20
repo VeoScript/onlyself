@@ -35,12 +35,13 @@ model User {
 }
 
 model Message {
-  id           String    @id @default(cuid())
-  content      String
-  is_anonymous Boolean
-  sender       String
-  created_at   DateTime  @default(now())
-  updated_at   DateTime?
-  user         User      @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  user_id      String
+  id             String    @id @default(cuid())
+  content        String
+  is_anonymous   Boolean
+  sender         String
+  sender_profile String?
+  created_at     DateTime  @default(now())
+  updated_at     DateTime?
+  user           User      @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user_id        String
 }

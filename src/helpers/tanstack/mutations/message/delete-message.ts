@@ -1,19 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
-export const useCreateMessageMutation = () => {
+export const useDeleteMessageMutation = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    (args: {
-      is_anonymous: boolean;
-      content: string;
-      sender_profile: string;
-      sender: string;
-      receiver_id: string;
-    }) => axios.post('/api/message/create', args),
+    (args: { message_id: string }) => axios.delete(`/api/message/delete/${args.message_id}`),
     {
       onError: (error: any) => {
-        console.error('SENDING MESSAGE ERROR', error.response.data);
+        console.error('DELETE MESSAGE ERROR', error.response.data);
       },
       onSuccess: async () => {
         queryClient.invalidateQueries(['messages']);
