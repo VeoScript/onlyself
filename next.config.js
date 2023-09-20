@@ -8,6 +8,7 @@ const nextConfig = {
     IMGBB_API_KEY: process.env.IMGBB_API_KEY,
   },
   images: {
+    dangerouslyAllowSVG: true,
     domains: ['i.ibb.co', 'pbs.twimg.com'],
   },
 };

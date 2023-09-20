@@ -149,7 +149,7 @@ const Profile = (): JSX.Element => {
                       {profile.is_display_name ? profile.name : `@${profile.username}`}
                     </h1>
                     {profile.is_display_name && (
-                      <h1 className="text-base font-medium text-white">@{profile.username}</h1>
+                      <h1 className="text-base font-medium text-neutral-300">@{profile.username}</h1>
                     )}
                     {(profile.facebook_link ||
                       profile.instagram_link ||

@@ -56,17 +56,19 @@ const MessagesModal = (): JSX.Element => {
               <label className="ml-3 text-base font-bold" htmlFor="search_messages">
                 Messages
               </label>
-              <button
-                type="button"
-                className="rounded-xl bg-neutral-500 px-3 py-1 text-xs text-white outline-none hover:bg-opacity-50"
-                onClick={() => {
-                  setDeleteType('delete-all-messages');
-                  setDeleteValue(username as string);
-                  setIsOpenDeleteMessage(true);
-                }}
-              >
-                Clear all
-              </button>
+              {messages && messages.pages[0].messages.length != 0 && (
+                <button
+                  type="button"
+                  className="rounded-xl bg-neutral-500 px-3 py-1 text-xs text-white outline-none hover:bg-opacity-50"
+                  onClick={() => {
+                    setDeleteType('delete-all-messages');
+                    setDeleteValue(username as string);
+                    setIsOpenDeleteMessage(true);
+                  }}
+                >
+                  Clear all
+                </button>
+              )}
             </div>
             <div className="flex w-full flex-row items-center gap-x-2 rounded-full bg-black bg-opacity-60 px-3 py-2 text-sm text-white backdrop-blur-sm">
               <svg
@@ -145,10 +147,12 @@ const MessagesModal = (): JSX.Element => {
                           )}
                           <div className="flex flex-1 flex-col gap-y-1">
                             <div className="flex w-full flex-row items-center justify-between">
-                              <h1 className={clsx(
-                                message.is_anonymous ? 'text-accent-2' : 'text-white',
-                                'text-sm font-bold'
-                              )}>
+                              <h1
+                                className={clsx(
+                                  message.is_anonymous ? 'text-accent-2' : 'text-white',
+                                  'text-sm font-bold',
+                                )}
+                              >
                                 {message.is_anonymous ? message.sender : `@${message.sender}`}
                               </h1>
                               <button
