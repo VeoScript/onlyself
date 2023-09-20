@@ -57,16 +57,16 @@ const MessagesModal = (): JSX.Element => {
                 Messages
               </label>
               <button
-                type="button"
-                className="rounded-xl bg-neutral-500 px-3 py-1 text-xs text-white outline-none hover:bg-opacity-50"
-                onClick={() => {
-                  setDeleteType('delete-all-messages');
-                  setDeleteValue(username as string);
-                  setIsOpenDeleteMessage(true);
-                }}
-              >
-                Clear all
-              </button>
+                  type="button"
+                  className="rounded-xl bg-neutral-500 px-3 py-1 text-xs text-white outline-none hover:bg-opacity-50"
+                  onClick={() => {
+                    setDeleteType('delete-all-messages');
+                    setDeleteValue(username as string);
+                    setIsOpenDeleteMessage(true);
+                  }}
+                >
+                  Clear all
+                </button>
             </div>
             <div className="flex w-full flex-row items-center gap-x-2 rounded-full bg-black bg-opacity-60 px-3 py-2 text-sm text-white backdrop-blur-sm">
               <svg

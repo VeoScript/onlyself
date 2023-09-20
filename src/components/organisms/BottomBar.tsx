@@ -10,19 +10,23 @@ import {
 } from '~/helpers/stores/modals';
 
 import { useGetUser } from '~/helpers/tanstack/queries/user';
+import { useGetCountUnread } from '~/helpers/tanstack/queries/messages/count-unread';
 
 const BottomBar = (): JSX.Element => {
   const { data: user, isLoading: isLoadingUser } = useGetUser();
+  const { data: unreadMessages, isLoading: isLoadingUnreadMessages } = useGetCountUnread();
 
   const { setIsOpen: setIsOpenDiscoverModal } = discoverModalStore();
   const { setIsOpen: setIsOpenMessagesModal } = messageModalStore();
   const { setIsOpen: setIsOpenFilesModal } = filesModalStore();
   const { setIsOpen: setIsOpenSettingsModal } = settingsModalStore();
 
+  console.log('unreadMessages', unreadMessages);
+
   return (
     <div className="absolute bottom-5 z-20 flex w-full justify-center px-0 md:px-3">
       <div className="flex w-auto flex-row items-center justify-center gap-x-2 overflow-hidden rounded-xl bg-black bg-opacity-20 p-2 backdrop-blur-sm">
-        {isLoadingUser ? (
+        {isLoadingUser || isLoadingUnreadMessages ? (
           <div className="flex w-full flex-row items-center px-5 py-2">
             <ActivityIndicator className="h-6 w-6" />
           </div>
@@ -88,7 +92,7 @@ const BottomBar = (): JSX.Element => {
                 <button
                   data-tooltip-id="onlyself-tooltip"
                   data-tooltip-content="Messages"
-                  className="rounded-xl bg-white bg-opacity-20 p-2 outline-none backdrop-blur-sm transition duration-200 ease-in-out hover:scale-110 hover:bg-opacity-10"
+                  className="relative rounded-xl bg-white bg-opacity-20 p-2 outline-none backdrop-blur-sm transition duration-200 ease-in-out hover:scale-110 hover:bg-opacity-10"
                   type="button"
                   onClick={() => setIsOpenMessagesModal(true)}
                 >
@@ -106,6 +110,11 @@ const BottomBar = (): JSX.Element => {
                   >
                     <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
                   </svg>
+                  {unreadMessages != 0 && (
+                    <p className="absolute -right-1 -top-2 z-10 flex h-5 w-5 flex-row items-center justify-center rounded-full bg-red-500 text-[11px] text-white">
+                      <span>{unreadMessages}</span>
+                    </p>
+                  )}
                 </button>
                 <button
                   data-tooltip-id="onlyself-tooltip"

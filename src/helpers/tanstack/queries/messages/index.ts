@@ -10,6 +10,7 @@ export const useGetMessages = (search: string) => {
     },
     {
       cacheTime: 0,
+      refetchInterval: 10000,
       getNextPageParam: (lastPage) => lastPage.nextId ?? false,
       onError: (error: any) => {
         console.error('ERROR GET MESSAGES', error.response.data);

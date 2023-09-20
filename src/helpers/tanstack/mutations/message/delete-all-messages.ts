@@ -11,6 +11,7 @@ export const useDeleteAllMessagesMutation = () => {
       },
       onSuccess: async () => {
         queryClient.invalidateQueries(['messages']);
+        queryClient.invalidateQueries(['countUnread']);
       },
     },
   );

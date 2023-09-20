@@ -97,13 +97,13 @@ const Profile = (): JSX.Element => {
                   layout="fill"
                   src={profile.cover_photo}
                   blurDataURL={profile.cover_photo}
-                  className="h-full w-full bg-accent-3 object-cover"
+                  className="h-full w-full bg-accent-1 object-cover"
                   alt="cover_image"
                   placeholder="blur"
                   quality={80}
                 />
               ) : (
-                <div className="h-full w-full bg-accent-3 object-cover" />
+                <div className="h-full w-full bg-accent-1 object-cover" />
               )}
               <div className="absolute z-20 flex h-full w-full flex-col items-center justify-start gap-y-3 overflow-y-auto pb-24">
                 {profile.profile_photo ? (

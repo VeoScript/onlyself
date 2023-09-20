@@ -9,39 +9,14 @@ export default withIronSessionApiRoute(
 
       if (!req.session.user) return res.status(403).json('NOT AUTHENTICATED');
 
-      const { search, cursor } = req.query;
-
-      const limit = 15;
-      const cursorObj = cursor === '' ? undefined : { id: (cursor as string) ?? '' };
-
-      const messages = await prisma.message.findMany({
+      const countUnread = await prisma.message.count({
         where: {
           user_id: req.session.user.id,
-          sender: {
-            contains: search as string,
-          },
+          is_read: false,
         },
-        select: {
-          id: true,
-          is_read: true,
-          is_anonymous: true,
-          content: true,
-          sender: true,
-          sender_profile: true,
-          created_at: true,
-        },
-        orderBy: {
-          created_at: 'desc',
-        },
-        take: limit,
-        cursor: cursorObj,
-        skip: cursor === '' ? 0 : 1,
       });
 
-      res.status(200).json({
-        messages,
-        nextId: messages.length === limit ? messages[limit - 1].id : undefined,
-      });
+      res.status(200).json(countUnread);
     } catch (error) {
       return res.status(500).json(error);
     }

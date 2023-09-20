@@ -62,6 +62,13 @@ const MessageInputText = ({
     );
   };
 
+  const onEnterPress = (e: React.KeyboardEvent) => {
+    if (e.keyCode == 13 && e.shiftKey == false) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
     <div
       className="flex w-full flex-col items-center overflow-hidden rounded-xl"
@@ -99,6 +106,7 @@ const MessageInputText = ({
         spellCheck={false}
         value={messageContent}
         onChange={(e) => setMessageContent(e.currentTarget.value)}
+        onKeyDown={onEnterPress}
       />
       <div className="flex w-full flex-row items-center justify-between gap-x-1 bg-white bg-opacity-20 p-3 backdrop-blur-sm">
         <div className="flex flex-row items-center gap-x-1">

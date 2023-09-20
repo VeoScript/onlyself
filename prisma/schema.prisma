@@ -36,8 +36,9 @@ model User {
 
 model Message {
   id             String    @id @default(cuid())
-  content        String
+  is_read        Boolean   @default(false)
   is_anonymous   Boolean
+  content        String
   sender         String
   sender_profile String?
   created_at     DateTime  @default(now())
