@@ -11,14 +11,16 @@ import { messageModalStore } from '~/helpers/stores/modals';
 import { MessageProps } from '~/shared/interfaces';
 import { useGetMessages } from '~/helpers/tanstack/queries/messages';
 
-const MessagesModal = (): JSX.Element => {
-  const router = useRouter();
+interface MessagesModalProps {
+  username: string;
+}
 
-  const { username } = router.query;
+const MessagesModal = ({ username }: MessagesModalProps): JSX.Element => {
+  const router = useRouter();
 
   const { ref, inView } = useInView();
 
-  const { isOpen } = messageModalStore();
+  const { isOpen, setIsOpen } = messageModalStore();
 
   const [search, setSearch] = useState<string>('');
   const [deleteValue, setDeleteValue] = useState<string>('');
@@ -90,7 +92,7 @@ const MessagesModal = (): JSX.Element => {
                 autoComplete="off"
                 type="text"
                 id="search_messages"
-                placeholder="Search message by sender"
+                placeholder="Search message content"
                 value={search}
                 onChange={(e) => setSearch(e.currentTarget.value)}
               />
@@ -116,10 +118,10 @@ const MessagesModal = (): JSX.Element => {
                           key={i}
                           className="flex w-full cursor-default flex-row items-start gap-x-2 rounded-xl bg-black bg-opacity-50 px-3 py-2 backdrop-blur-sm transition duration-100 hover:bg-opacity-10"
                         >
-                          {message.sender_profile ? (
+                          {message.sender ? (
                             <Image
                               priority
-                              src={message.sender_profile}
+                              src={message.sender.profile_photo}
                               className="h-[3rem] w-[3rem] rounded-full bg-black object-cover"
                               alt="profile_image"
                               width={500}
@@ -147,14 +149,23 @@ const MessagesModal = (): JSX.Element => {
                           )}
                           <div className="flex flex-1 flex-col gap-y-1">
                             <div className="flex w-full flex-row items-center justify-between">
-                              <h1
+                              <button
+                                type="button"
                                 className={clsx(
-                                  message.is_anonymous ? 'text-accent-2' : 'text-white',
+                                  message.is_anonymous
+                                    ? 'cursor-default text-black'
+                                    : 'cursor-pointer text-white',
                                   'text-sm font-bold',
                                 )}
+                                onClick={() => {
+                                  if (!message.is_anonymous) {
+                                    setIsOpen(false);
+                                    router.push(`/${message.sender.username}`);
+                                  }
+                                }}
                               >
-                                {message.is_anonymous ? message.sender : `@${message.sender}`}
-                              </h1>
+                                {message.is_anonymous ? 'Anonymous' : `@${message.sender.username}`}
+                              </button>
                               <button
                                 type="button"
                                 className="outline-none"

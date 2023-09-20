@@ -23,7 +23,8 @@ const SettingsModal = (): JSX.Element => {
   const updatePasswordMutation = useUpdatePasswordMutation();
 
   const { isOpen, setIsOpen } = settingsModalStore();
-  const { imageCoverUploaded, previewCoverImage, setImageCoverUploaded, setPreviewCoverImage } = uploadCoverStore();
+  const { imageCoverUploaded, previewCoverImage, setImageCoverUploaded, setPreviewCoverImage } =
+    uploadCoverStore();
   const {
     imageProfileUploaded,
     previewProfileImage,
@@ -590,13 +591,13 @@ const SettingsModal = (): JSX.Element => {
                       });
                     }}
                     className={clsx(
-                      displayName ? 'bg-blue-600' : 'bg-gray-200',
+                      displayName ? 'bg-green-500' : 'bg-gray-200',
                       'relative inline-flex h-6 w-11 items-center rounded-full',
                     )}
                   >
                     <span
                       className={clsx(
-                        displayName ? 'translate-x-6 bg-white' : 'translate-x-1 bg-blue-600',
+                        displayName ? 'translate-x-6 bg-white' : 'translate-x-1 bg-green-500',
                         'inline-block h-4 w-4 transform rounded-full transition',
                       )}
                     />
@@ -615,7 +616,7 @@ const SettingsModal = (): JSX.Element => {
                       });
                     }}
                     className={clsx(
-                      receiveFilesAnonymous ? 'bg-blue-600' : 'bg-gray-200',
+                      receiveFilesAnonymous ? 'bg-green-500' : 'bg-gray-200',
                       'relative inline-flex h-6 w-11 items-center rounded-full',
                     )}
                   >
@@ -623,7 +624,7 @@ const SettingsModal = (): JSX.Element => {
                       className={clsx(
                         receiveFilesAnonymous
                           ? 'translate-x-6 bg-white'
-                          : 'translate-x-1 bg-blue-600',
+                          : 'translate-x-1 bg-green-500',
                         'inline-block h-4 w-4 transform rounded-full transition',
                       )}
                     />
@@ -642,7 +643,7 @@ const SettingsModal = (): JSX.Element => {
                       });
                     }}
                     className={clsx(
-                      receiveImagesAnonymous ? 'bg-blue-600' : 'bg-gray-200',
+                      receiveImagesAnonymous ? 'bg-green-500' : 'bg-gray-200',
                       'relative inline-flex h-6 w-11 items-center rounded-full',
                     )}
                   >
@@ -650,7 +651,7 @@ const SettingsModal = (): JSX.Element => {
                       className={clsx(
                         receiveImagesAnonymous
                           ? 'translate-x-6 bg-white'
-                          : 'translate-x-1 bg-blue-600',
+                          : 'translate-x-1 bg-green-500',
                         'inline-block h-4 w-4 transform rounded-full transition',
                       )}
                     />
@@ -670,9 +671,10 @@ const SettingsModal = (): JSX.Element => {
                     Facebook
                   </label>
                   <input
-                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-black outline-none backdrop-blur-sm placeholder:text-neutral-300"
                     type="text"
                     id="facebook"
+                    placeholder="facebook_username"
                     value={facebookLink}
                     onChange={(e) => setFacebookLink(e.currentTarget.value)}
                   />
@@ -682,9 +684,10 @@ const SettingsModal = (): JSX.Element => {
                     Instagram
                   </label>
                   <input
-                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-black outline-none backdrop-blur-sm placeholder:text-neutral-300"
                     type="text"
                     id="instagram"
+                    placeholder="instagram_username"
                     value={instagramLink}
                     onChange={(e) => setInstagramLink(e.currentTarget.value)}
                   />
@@ -694,9 +697,10 @@ const SettingsModal = (): JSX.Element => {
                     Twitter/X
                   </label>
                   <input
-                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-black outline-none backdrop-blur-sm placeholder:text-neutral-300"
                     type="text"
                     id="twitterx"
+                    placeholder="twitter/x_username"
                     value={twitterxLink}
                     onChange={(e) => setTwitterxLink(e.currentTarget.value)}
                   />
@@ -706,9 +710,10 @@ const SettingsModal = (): JSX.Element => {
                     LinkedIn
                   </label>
                   <input
-                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-black outline-none backdrop-blur-sm placeholder:text-neutral-300"
                     type="text"
                     id="linkedin"
+                    placeholder="linkedin_username"
                     value={linkedinLink}
                     onChange={(e) => setLinkedinLink(e.currentTarget.value)}
                   />
@@ -718,9 +723,10 @@ const SettingsModal = (): JSX.Element => {
                     Github
                   </label>
                   <input
-                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-black outline-none backdrop-blur-sm placeholder:text-neutral-300"
                     type="text"
                     id="github"
+                    placeholder="github_username"
                     value={githubLink}
                     onChange={(e) => setGithubLink(e.currentTarget.value)}
                   />
@@ -730,9 +736,10 @@ const SettingsModal = (): JSX.Element => {
                     Website
                   </label>
                   <input
-                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-white outline-none backdrop-blur-sm"
+                    className="w-full rounded-lg bg-white bg-opacity-20 px-3 py-2 text-sm text-black outline-none backdrop-blur-sm placeholder:text-neutral-300"
                     type="text"
                     id="website"
+                    placeholder="e.g. https://www.mywebsite.com"
                     value={websiteLink}
                     onChange={(e) => setWebsiteLink(e.currentTarget.value)}
                   />

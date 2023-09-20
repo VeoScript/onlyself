@@ -11,7 +11,7 @@ export default withIronSessionApiRoute(
 
       const countUnread = await prisma.message.count({
         where: {
-          user_id: req.session.user.id,
+          receiver_id: req.session.user.id,
           is_read: false,
         },
       });

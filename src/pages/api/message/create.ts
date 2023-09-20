@@ -7,15 +7,14 @@ export default withIronSessionApiRoute(
     try {
       if (req.method !== 'POST') return res.status(500).json('INVALID REQUEST METHOD');
 
-      const { is_anonymous, content, sender_profile, sender, receiver_id } = req.body;
+      const { is_anonymous, content, sender_id, receiver_id } = req.body;
 
       const message = await prisma.message.create({
         data: {
           is_anonymous,
           content,
-          sender_profile: is_anonymous ? null : sender_profile,
-          sender: is_anonymous ? 'Anonymous' : sender,
-          user_id: receiver_id,
+          sender_id: is_anonymous ? null : sender_id,
+          receiver_id,
         },
       });
 

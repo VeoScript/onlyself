@@ -16,6 +16,7 @@ export const useUpdatePrivacyOptionsMutation = () => {
       },
       onSuccess: async (data) => {
         queryClient.invalidateQueries(['user']);
+        queryClient.invalidateQueries(['users']);
         queryClient.invalidateQueries(['profile']);
         Router.push(`/${data.data.username}`);
       },

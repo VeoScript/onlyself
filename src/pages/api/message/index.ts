@@ -16,8 +16,8 @@ export default withIronSessionApiRoute(
 
       const messages = await prisma.message.findMany({
         where: {
-          user_id: req.session.user.id,
-          sender: {
+          receiver_id: req.session.user.id,
+          content: {
             contains: search as string,
           },
         },
@@ -26,8 +26,20 @@ export default withIronSessionApiRoute(
           is_read: true,
           is_anonymous: true,
           content: true,
-          sender: true,
-          sender_profile: true,
+          sender: {
+            select: {
+              id: true,
+              profile_photo: true,
+              username: true,
+            },
+          },
+          receiver: {
+            select: {
+              id: true,
+              profile_photo: true,
+              username: true,
+            },
+          },
           created_at: true,
         },
         orderBy: {

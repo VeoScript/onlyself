@@ -12,7 +12,7 @@ export default withIronSessionApiRoute(
 
       const message = await prisma.message.updateMany({
         where: {
-          user_id: req.session.user.id,
+          receiver_id: req.session.user.id,
         },
         data: {
           is_read: true,
