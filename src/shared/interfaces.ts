@@ -21,8 +21,9 @@ export interface UserProps {
 
 export interface MessageProps {
   id: string;
+  is_read: boolean;
+  is_anonymous: boolean;
   content: string;
-  is_anonymous: string;
   sender: string;
   sender_profile: string;
   created_at: string;
