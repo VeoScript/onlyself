@@ -6,14 +6,17 @@ export default withSessionApiRoute(async function handler(req: any, res: NextApi
   try {
     if (req.method !== 'POST') return res.status(500).json('INVALID REQUEST METHOD');
 
-    const { type, name, url, delete_url } = req.body;
+    const { is_anonymous, type, name, url, delete_url, sender_id, receiver_id } = req.body;
 
     const upload = await prisma.filesImages.create({
       data: {
+        is_anonymous,
         type,
         name,
         url,
         delete_url,
+        sender_id: is_anonymous ? null : sender_id,
+        receiver_id,
       },
     });
 
