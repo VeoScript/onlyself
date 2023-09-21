@@ -115,7 +115,7 @@ const MessagesModal = ({ username }: MessagesModalProps): JSX.Element => {
                     <Fragment key={i}>
                       {page.messages.map((message: MessageProps) => (
                         <div
-                          key={i}
+                          key={message.id}
                           className="flex w-full cursor-default flex-row items-start gap-x-2 rounded-xl bg-black bg-opacity-50 px-3 py-2 backdrop-blur-sm transition duration-100 hover:bg-opacity-10"
                         >
                           {message.sender ? (
