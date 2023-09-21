@@ -24,3 +24,15 @@ export const uploadCoverStore = create<type.UploadCoverProps>((set) => ({
       imageCoverUploaded: null,
     })),
 }));
+
+export const sendImagesStore = create<type.SendMessageImagesProps>((set, get) => ({
+  previewImages: [],
+  imagesUploaded: [],
+  setPreviewImages: (value: any[]) => set(() => ({ previewImages: [...get().previewImages, value] })),
+  setImagesUpload: (value: any[]) => set(() => ({ imagesUploaded: [...get().imagesUploaded, value] })),
+  setDefault: () =>
+    set(() => ({
+      previewImages: [],
+      imagesUploaded: [],
+    })),
+}));

@@ -18,3 +18,11 @@ export interface UploadCoverProps {
   setImageCoverUploaded: (value: any) => void;
   setDefault: () => void;
 }
+
+export interface SendMessageImagesProps {
+  previewImages: any[];
+  imagesUploaded: any[];
+  setPreviewImages: (value: any[]) => void;
+  setImagesUpload: (value: any[]) => void;
+  setDefault: () => void;
+}

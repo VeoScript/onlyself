@@ -47,3 +47,18 @@ model Message {
   receiver     User      @relation("receiver", fields: [receiver_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   receiver_id  String
 }
+
+model FilesImages {
+  id         String           @id @default(cuid())
+  type       FilesImagesTypes @default(IMAGE)
+  name       String
+  url        String
+  delete_url String?
+  created_at DateTime         @default(now())
+  updated_at DateTime?
+}
+
+enum FilesImagesTypes {
+  IMAGE
+  FILE
+}
