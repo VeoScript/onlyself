@@ -26,3 +26,11 @@ export interface SendMessageImagesProps {
   setImagesUpload: (value: any[]) => void;
   setDefault: () => void;
 }
+
+export interface SendMessageFilesProps {
+  files: any[];
+  fileUrls: any[];
+  setFiles: (value: any[]) => void;
+  setFileUrls: (value: any[]) => void;
+  setDefault: () => void;
+}

@@ -25,14 +25,26 @@ export const uploadCoverStore = create<type.UploadCoverProps>((set) => ({
     })),
 }));
 
-export const sendImagesStore = create<type.SendMessageImagesProps>((set, get) => ({
+export const sendImagesStore = create<type.SendMessageImagesProps>((set) => ({
   previewImages: [],
   imagesUploaded: [],
-  setPreviewImages: (value: any[]) => set(() => ({ previewImages: [...get().previewImages, value] })),
-  setImagesUpload: (value: any[]) => set(() => ({ imagesUploaded: [...get().imagesUploaded, value] })),
+  setPreviewImages: (value: any[]) => set((state) => ({ previewImages: [...state.previewImages, value] })),
+  setImagesUpload: (value: any[]) => set((state) => ({ imagesUploaded: [...state.imagesUploaded, value] })),
   setDefault: () =>
     set(() => ({
       previewImages: [],
       imagesUploaded: [],
+    })),
+}));
+
+export const sendFilesStore = create<type.SendMessageFilesProps>((set, get) => ({
+  files: [],
+  fileUrls: [],
+  setFiles: (value: any) => set((state) => ({ files: [...state.files, value] })),
+  setFileUrls: (value: any) => set((state) => ({ fileUrls: [...state.fileUrls, value] })),
+  setDefault: () =>
+    set(() => ({
+      files: [],
+      fileUrls: [],
     })),
 }));
