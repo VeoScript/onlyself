@@ -5,7 +5,9 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import ActivityIndicator from '../atoms/ActivityIndicator';
 
-import { sendImagesStore } from '~/helpers/stores/upload';
+import { useUploadThing } from '~/utils/uploadthing';
+
+import { sendImagesStore, sendFilesStore } from '~/helpers/stores/upload';
 import { useCreateMessageMutation } from '~/helpers/tanstack/mutations/message/create-message';
 import { useUploadFilesImagesMutation } from '~/helpers/tanstack/mutations/files-images/upload';
 
@@ -28,7 +30,6 @@ const MessageInputText = ({
   const uploadFilesImagesMutation = useUploadFilesImagesMutation();
 
   const [isPending, setIsPending] = useState<boolean>(false);
-
   const [isAnonymous, setIsAnonymous] = useState<boolean>(true);
   const [messageContent, setMessageContent] = useState<string>('');
 
@@ -40,10 +41,7 @@ const MessageInputText = ({
     setDefault: setDefaultImages,
   } = sendImagesStore();
 
-  const setDefault = () => {
-    setIsPending(false);
-    setMessageContent('');
-  };
+  const { files, fileUrls, setFiles, setFileUrls, setDefault: setDefaultFiles } = sendFilesStore();
 
   const deleteSingleImage = (indexToDelete: number) => {
     sendImagesStore.setState((prevState) => {
@@ -57,7 +55,22 @@ const MessageInputText = ({
     });
   };
 
-  const handleAddImages = (e: any) => {
+  const deleteSingleFile = (indexToDelete: number) => {
+    sendFilesStore.setState((prevState) => {
+      const newPreviewFiles = [...prevState.fileUrls];
+      const newFilesUploaded = [...prevState.files];
+
+      newPreviewFiles.splice(indexToDelete, 1);
+      newFilesUploaded.splice(indexToDelete, 1);
+
+      return { fileUrls: newPreviewFiles, files: newFilesUploaded };
+    });
+  };
+
+  // UPLOAD THE FILES TO UPLOADTHING...
+  const { startUpload } = useUploadThing('mediaPost');
+
+  const handleAddImages = (e: any): void => {
     for (const file of e.target.files) {
       setImagesUpload(file);
 
@@ -70,7 +83,17 @@ const MessageInputText = ({
       reader.onerror = () => {
         console.error(reader.error);
       };
+      e.target.value = null;
     }
+  };
+
+  const handleAddFiles = (e: any): void => {
+    for (const file of e.target.files) {
+      setFiles(file);
+      setFileUrls(file.name);
+    }
+
+    e.target.value = null;
   };
 
   const handleSendMessage = async () => {
@@ -92,6 +115,8 @@ const MessageInputText = ({
           toast.error(error.response.data.message);
         },
         onSuccess: () => {
+          setIsPending(false);
+          setMessageContent('');
           toast.success('Message sent successfully.');
         },
       },
@@ -99,6 +124,7 @@ const MessageInputText = ({
 
     // upload bulk images to hosting...
     if (imagesUploaded) {
+      setIsPending(true);
       for (const image of imagesUploaded) {
         const formData = new FormData();
         formData.append('image', image);
@@ -125,9 +151,9 @@ const MessageInputText = ({
                   toast.error('Upload images failed. Try again.');
                 },
                 onSuccess: () => {
+                  setIsPending(false);
                   toast.success('Images uploaded successfully.');
                   setDefaultImages();
-                  setDefault();
                 },
               },
             );
@@ -136,6 +162,38 @@ const MessageInputText = ({
             console.error(error);
           });
       }
+    }
+
+    if (files) {
+      setIsPending(true);
+      await startUpload(files)
+        .then((result) => {
+          result?.map(async (file: any) => {
+            await uploadFilesImagesMutation.mutateAsync(
+              {
+                is_anonymous: isAnonymous,
+                name: file.fileName,
+                type: 'FILE',
+                url: file.fileUrl,
+                delete_url: file.fileKey,
+                sender_id: senderId,
+                receiver_id: receiverId,
+              },
+              {
+                onError: () => {
+                  setIsPending(false);
+                  toast.error('Upload files failed. Try again.');
+                },
+                onSuccess: () => {
+                  setIsPending(false);
+                  toast.success('Files uploaded successfully.');
+                  setDefaultFiles();
+                },
+              },
+            );
+          });
+        })
+        .catch((error: any) => toast.error(error?.message));
     }
   };
 
@@ -257,7 +315,7 @@ const MessageInputText = ({
                   type="file"
                   id="sendFile"
                   className="hidden"
-                  onChange={() => ''}
+                  onChange={handleAddFiles}
                   accept=".pdf, .docx, .xlsx, .pptx"
                 />
               </>
@@ -325,6 +383,36 @@ const MessageInputText = ({
                   height={100}
                   quality={100}
                 />
+              </div>
+            ))}
+          </div>
+        )}
+        {fileUrls.length != 0 && (
+          <div className="flex h-full w-full flex-col gap-y-2">
+            {fileUrls.map((file: any, index: number) => (
+              <div
+                key={file}
+                className="flex w-full flex-1 flex-row items-center justify-between overflow-hidden rounded-md"
+              >
+                <p className="text-sm text-white">{file}</p>
+                {!isPending && (
+                  <button
+                    type="button"
+                    className="rounded-full bg-black bg-opacity-50 p-1 outline-none hover:opacity-50"
+                    onClick={() => deleteSingleFile(index)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="h-4 w-4 text-white"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
               </div>
             ))}
           </div>

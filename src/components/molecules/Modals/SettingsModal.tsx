@@ -70,6 +70,12 @@ const SettingsModal = (): JSX.Element => {
   const [newPassword, setNewPassword] = useState<string>('');
   const [repassword, setRepassword] = useState<string>('');
 
+  useEffect(() => {
+    if (user && isOpen) {
+      handleUpdateSettingStates(user);
+    }
+  }, [user, isOpen]);
+
   const handleUpdateSettingStates = (user: UserProps | null) => {
     setCoverPhoto(user?.cover_photo ?? null);
     setProfilePhoto(user?.profile_photo ?? null);
@@ -90,12 +96,6 @@ const SettingsModal = (): JSX.Element => {
     setGithubLink(user?.github_link ?? '');
     setWebsiteLink(user?.website_link ?? '');
   };
-
-  useEffect(() => {
-    if (user && isOpen) {
-      handleUpdateSettingStates(user);
-    }
-  }, [user, isOpen]);
 
   const handleUpdateProfileImage = (e: any) => {
     try {

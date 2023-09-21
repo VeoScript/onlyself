@@ -13,29 +13,32 @@ export default withSessionApiRoute(async function handler(req: any, res: NextApi
     const limit = 20;
     const cursorObj = cursor === '' ? undefined : { id: (cursor as string) ?? '' };
 
-    const messages = await prisma.message.findMany({
+    const filesImages = await prisma.filesImages.findMany({
       where: {
         receiver_id: req.session.user.id,
-        content: {
-          contains: search as string,
+        sender: {
+          username: {
+            contains: search as string,
+          },
         },
       },
       select: {
         id: true,
         is_read: true,
         is_anonymous: true,
-        content: true,
+        name: true,
+        type: true,
+        url: true,
+        delete_url: true,
         sender: {
           select: {
             id: true,
-            profile_photo: true,
             username: true,
           },
         },
         receiver: {
           select: {
             id: true,
-            profile_photo: true,
             username: true,
           },
         },
@@ -50,8 +53,8 @@ export default withSessionApiRoute(async function handler(req: any, res: NextApi
     });
 
     res.status(200).json({
-      messages,
-      nextId: messages.length === limit ? messages[limit - 1].id : undefined,
+      filesImages,
+      nextId: filesImages.length === limit ? filesImages[limit - 1].id : undefined,
     });
   } catch (error) {
     return res.status(500).json(error);

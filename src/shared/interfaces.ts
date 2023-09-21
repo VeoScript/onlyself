@@ -37,3 +37,23 @@ export interface MessageProps {
     username: string;
   };
 }
+
+export interface FilesImagesProps {
+  id: string;
+  is_read: boolean;
+  is_anonymous: boolean;
+  name: string;
+  type: 'IMAGE' | 'FILE';
+  url: string;
+  delete_url: string;
+  created_at: string;
+  updated_at: string;
+  sender: {
+    id: string;
+    username: string;
+  };
+  receiver: {
+    id: string;
+    username: string;
+  };
+}
