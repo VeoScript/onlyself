@@ -78,43 +78,6 @@ const MessageInputText = ({
 
     setIsPending(true);
 
-    // upload bulk images to hosting...
-    if (imagesUploaded) {
-      for (const image of imagesUploaded) {
-        const formData = new FormData();
-        formData.append('image', image);
-
-        await fetch(`https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`, {
-          method: 'POST',
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then(async (result) => {
-            await uploadFilesImagesMutation.mutateAsync(
-              {
-                name: result.data.image.filename,
-                type: 'IMAGE',
-                url: result.data.url,
-                delete_url: result.data.delete_url,
-              },
-              {
-                onError: () => {
-                  setIsPending(false);
-                  toast.error('Upload images failed. Try again.');
-                },
-                onSuccess: () => {
-                  toast.success('Images uploaded successfully.');
-                  setDefaultImages();
-                },
-              },
-            );
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }
-    }
-
     // send message...
     await createMessageMutation.mutateAsync(
       {
@@ -130,10 +93,50 @@ const MessageInputText = ({
         },
         onSuccess: () => {
           toast.success('Message sent successfully.');
-          setDefault();
         },
       },
     );
+
+    // upload bulk images to hosting...
+    if (imagesUploaded) {
+      for (const image of imagesUploaded) {
+        const formData = new FormData();
+        formData.append('image', image);
+
+        await fetch(`https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`, {
+          method: 'POST',
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then(async (result) => {
+            await uploadFilesImagesMutation.mutateAsync(
+              {
+                is_anonymous: isAnonymous,
+                name: result.data.image.filename,
+                type: 'IMAGE',
+                url: result.data.url,
+                delete_url: result.data.delete_url,
+                sender_id: senderId,
+                receiver_id: receiverId,
+              },
+              {
+                onError: () => {
+                  setIsPending(false);
+                  toast.error('Upload images failed. Try again.');
+                },
+                onSuccess: () => {
+                  toast.success('Images uploaded successfully.');
+                  setDefaultImages();
+                  setDefault();
+                },
+              },
+            );
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    }
   };
 
   const onEnterPress = (e: React.KeyboardEvent) => {
@@ -174,6 +177,7 @@ const MessageInputText = ({
         </div>
       </div>
       <textarea
+        disabled={isPending}
         className="h-full w-full resize-none bg-white p-3 text-sm outline-none"
         rows={5}
         cols={40}
@@ -190,7 +194,7 @@ const MessageInputText = ({
               <>
                 <label
                   htmlFor="sendImage"
-                  className="flex flex-row items-center gap-x-1 rounded-xl border border-neutral-400 p-2 outline-none hover:opacity-50"
+                  className="flex cursor-pointer flex-row items-center gap-x-1 rounded-xl border border-neutral-400 p-2 outline-none hover:opacity-50"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -211,6 +215,7 @@ const MessageInputText = ({
                   <span className="text-xs font-light text-white">Send Image</span>
                 </label>
                 <input
+                  disabled={isPending}
                   multiple
                   type="file"
                   id="sendImage"
@@ -224,7 +229,7 @@ const MessageInputText = ({
               <>
                 <label
                   htmlFor="sendFile"
-                  className="flex flex-row items-center gap-x-1 rounded-xl border border-neutral-400 p-2 outline-none hover:opacity-50"
+                  className="flex cursor-pointer flex-row items-center gap-x-1 rounded-xl border border-neutral-400 p-2 outline-none hover:opacity-50"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -247,6 +252,7 @@ const MessageInputText = ({
                   <span className="text-xs font-light text-white">Send File</span>
                 </label>
                 <input
+                  disabled={isPending}
                   multiple
                   type="file"
                   id="sendFile"
