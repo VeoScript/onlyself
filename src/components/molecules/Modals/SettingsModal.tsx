@@ -3,6 +3,8 @@ import clsx from 'clsx';
 import LegacyImage from 'next/legacy/image';
 import ActivityIndicator from '~/components/atoms/ActivityIndicator';
 
+import { UserProps } from '~/shared/interfaces';
+
 import { Switch } from '@headlessui/react';
 import { toast } from 'react-hot-toast';
 import { updateAccountValidation, updatePasswordValidation } from '~/helpers/hooks/useValidation';
@@ -68,28 +70,32 @@ const SettingsModal = (): JSX.Element => {
   const [newPassword, setNewPassword] = useState<string>('');
   const [repassword, setRepassword] = useState<string>('');
 
+  const handleUpdateSettingStates = (user: UserProps | null) => {
+    setCoverPhoto(user?.cover_photo ?? null);
+    setProfilePhoto(user?.profile_photo ?? null);
+    setName(user?.name ?? '');
+    setUsername(user?.username ?? '');
+    setEmail(user?.email ?? '');
+    setShortBio(user?.short_bio ?? '');
+    setFavoriteQuote(user?.favorite_quote ?? '');
+
+    setDisplayName(user?.is_display_name ?? false);
+    setReceiveFilesAnonymous(user?.is_receive_files_anonymous ?? false);
+    setReceiveImagesAnonymous(user?.is_receive_images_anonymous ?? false);
+
+    setFacebookLink(user?.facebook_link ?? '');
+    setInstagramLink(user?.instagram_link ?? '');
+    setTwitterxLink(user?.twitterx_link ?? '');
+    setLinkedinLink(user?.linkedin_link ?? '');
+    setGithubLink(user?.github_link ?? '');
+    setWebsiteLink(user?.website_link ?? '');
+  };
+
   useEffect(() => {
-    if (user) {
-      setCoverPhoto(user.cover_photo ?? null);
-      setProfilePhoto(user.profile_photo ?? null);
-      setName(user.name ?? '');
-      setUsername(user.username ?? '');
-      setEmail(user.email ?? '');
-      setShortBio(user.short_bio ?? '');
-      setFavoriteQuote(user.favorite_quote ?? '');
-
-      setDisplayName(user.is_display_name);
-      setReceiveFilesAnonymous(user.is_receive_files_anonymous);
-      setReceiveImagesAnonymous(user.is_receive_images_anonymous);
-
-      setFacebookLink(user.facebook_link ?? '');
-      setInstagramLink(user.instagram_link ?? '');
-      setTwitterxLink(user.twitterx_link ?? '');
-      setLinkedinLink(user.linkedin_link ?? '');
-      setGithubLink(user.github_link ?? '');
-      setWebsiteLink(user.website_link ?? '');
+    if (user && isOpen) {
+      handleUpdateSettingStates(user);
     }
-  }, [user]);
+  }, [user, isOpen]);
 
   const handleUpdateProfileImage = (e: any) => {
     try {
