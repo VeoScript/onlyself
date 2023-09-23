@@ -4,22 +4,32 @@ import toast from 'react-hot-toast';
 
 import { useDeleteMessageMutation } from '~/helpers/tanstack/mutations/message/delete-message';
 import { useDeleteAllMessagesMutation } from '~/helpers/tanstack/mutations/message/delete-all-messages';
+import { useDeleteFileImageMutation } from '~/helpers/tanstack/mutations/files-images/delete-file-image';
+import { useDeleteAllFilesImagesMutation } from '~/helpers/tanstack/mutations/files-images/delete-all-files-images';
 
 interface DeleteConfirmationModalProps {
-  type: 'delete-message' | 'delete-all-messages';
+  type: 'delete-message' | 'delete-all-messages' | 'delete-files' | 'delete-all-files';
+  file_type?: 'FILE' | 'IMAGE';
   value: string;
+  delete_url?: string;
+  files?: any[];
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
 }
 
 const DeleteConfirmationModal = ({
   type,
+  file_type,
   value,
+  delete_url,
+  files,
   isOpen,
   setIsOpen,
 }: DeleteConfirmationModalProps): JSX.Element => {
   const deleteMessageMutation = useDeleteMessageMutation();
   const deleteAllMessagesMutation = useDeleteAllMessagesMutation();
+  const deleteFileImageMutation = useDeleteFileImageMutation();
+  const deleteAllFilesImagesMutation = useDeleteAllFilesImagesMutation();
 
   const [isPending, setIsPending] = useState<boolean>(false);
 
@@ -63,6 +73,50 @@ const DeleteConfirmationModal = ({
         },
       );
     }
+
+    if (type === 'delete-files') {
+      setIsPending(true);
+      await deleteFileImageMutation.mutateAsync(
+        {
+          file_image_id: value,
+          type: file_type as string,
+          delete_url: delete_url as string,
+        },
+        {
+          onError: () => {
+            toast.error('Error deleting file/image, try again.');
+            setIsPending(false);
+            setIsOpen(false);
+          },
+          onSuccess: () => {
+            setIsPending(false);
+            setIsOpen(false);
+          },
+        },
+      );
+    }
+
+    if (type === 'delete-all-files' && files) {
+      setIsPending(true);
+      await deleteAllFilesImagesMutation.mutateAsync(
+        {
+          username: value,
+          type: file_type as string,
+          files: files as any[],
+        },
+        {
+          onError: () => {
+            toast.error('Error deleting all files/images, try again.');
+            setIsPending(false);
+            setIsOpen(false);
+          },
+          onSuccess: () => {
+            setIsPending(false);
+            setIsOpen(false);
+          },
+        },
+      );
+    }
   };
 
   return (
@@ -86,6 +140,9 @@ const DeleteConfirmationModal = ({
               {type === 'delete-message' && 'Are you sure you want to delete this message?'}
               {type === 'delete-all-messages' &&
                 'Are you sure you want to delete all of your messages? This cannot be undone.'}
+              {type === 'delete-files' && 'Are you sure you want to delete this file?'}
+              {type === 'delete-all-files' &&
+                'Are you sure you want to delete all of your files and images? This cannot be undone.'}
             </p>
           </div>
           <div className="flex w-full flex-row items-center justify-end gap-x-1 p-3">
