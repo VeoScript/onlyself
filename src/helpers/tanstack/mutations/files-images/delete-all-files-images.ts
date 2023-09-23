@@ -12,6 +12,8 @@ export const useDeleteAllFilesImagesMutation = () => {
       },
       onSuccess: async () => {
         queryClient.invalidateQueries(['filesImages']);
+        queryClient.invalidateQueries(['allFiles']);
+        queryClient.invalidateQueries(['countUnreadFilesImages']);
       },
     },
   );

@@ -37,7 +37,7 @@ export const sendImagesStore = create<type.SendMessageImagesProps>((set) => ({
     })),
 }));
 
-export const sendFilesStore = create<type.SendMessageFilesProps>((set, get) => ({
+export const sendFilesStore = create<type.SendMessageFilesProps>((set) => ({
   files: [],
   fileUrls: [],
   setFiles: (value: any) => set((state) => ({ files: [...state.files, value] })),

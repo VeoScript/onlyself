@@ -43,8 +43,6 @@ const MessageInputText = ({
 
   const { files, fileUrls, setFiles, setFileUrls, setDefault: setDefaultFiles } = sendFilesStore();
 
-  console.log("imagesUploaded", imagesUploaded)
-
   const deleteSingleImage = (indexToDelete: number) => {
     sendImagesStore.setState((prevState) => {
       const newPreviewImages = [...prevState.previewImages];
@@ -73,7 +71,6 @@ const MessageInputText = ({
   const { startUpload } = useUploadThing('mediaPost');
 
   const handleAddImages = (e: any): void => {
-    console.log("fucking files", e.target.files)
     for (const file of e.target.files) {
       const imageTypeRegex = /image\/(png|jpg|jpeg|jfif)/gm;
 
@@ -103,16 +100,16 @@ const MessageInputText = ({
       reader.onerror = () => {
         console.error(reader.error);
       };
-      e.target.value = null;
     }
+    e.target.value = null;
   };
 
   const handleAddFiles = (e: any): void => {
     for (const file of e.target.files) {
       setFiles(file);
       setFileUrls(file.name);
-      e.target.value = null;
     }
+    e.target.value = null;
   };
 
   const handleSendMessage = async () => {
@@ -214,6 +211,8 @@ const MessageInputText = ({
         })
         .catch((error: any) => toast.error(error?.message));
     }
+
+    setIsPending(false);
   };
 
   const onEnterPress = (e: React.KeyboardEvent) => {
