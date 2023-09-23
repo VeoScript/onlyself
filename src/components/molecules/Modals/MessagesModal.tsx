@@ -181,7 +181,7 @@ const MessagesModal = ({ username }: MessagesModalProps): JSX.Element => {
                                   viewBox="0 0 24 24"
                                   strokeWidth={1.5}
                                   stroke="currentColor"
-                                  className="h-4 w-4 text-white"
+                                  className="h-4 w-4 text-white hover:text-opacity-50"
                                 >
                                   <path
                                     strokeLinecap="round"

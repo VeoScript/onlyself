@@ -16,10 +16,8 @@ export default withSessionApiRoute(async function handler(req: any, res: NextApi
     const filesImages = await prisma.filesImages.findMany({
       where: {
         receiver_id: req.session.user.id,
-        sender: {
-          username: {
-            contains: search as string,
-          },
+        name: {
+          contains: search as string,
         },
       },
       select: {

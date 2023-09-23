@@ -213,7 +213,7 @@ const Profile = (): JSX.Element => {
           </div>
           <DiscoverModal />
           <MessagesModal username={user?.username ?? ''} />
-          <FilesModal />
+          <FilesModal username={user?.username ?? ''} />
           <SettingsModal />
         </>
       )}
