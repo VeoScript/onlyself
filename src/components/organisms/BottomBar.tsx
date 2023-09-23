@@ -11,11 +11,15 @@ import {
 
 import { useGetUser } from '~/helpers/tanstack/queries/user';
 import { useGetCountUnread } from '~/helpers/tanstack/queries/messages/count-unread';
+import { useGetCountUnreadFilesImages } from '~/helpers/tanstack/queries/files-images/count-unread';
 import { useReadAllMessagesMutation } from '~/helpers/tanstack/mutations/message/read-all-messages';
+import { useReadAllFilesImagesMutation } from '~/helpers/tanstack/mutations/files-images/read-all-messages';
 
 const BottomBar = (): JSX.Element => {
   const { data: user, isLoading: isLoadingUser } = useGetUser();
   const { data: unreadMessages, isLoading: isLoadingUnreadMessages } = useGetCountUnread();
+  const { data: unreadFilesImages, isLoading: isLoadingUnreadFilesImages } =
+    useGetCountUnreadFilesImages();
 
   const { setIsOpen: setIsOpenDiscoverModal } = discoverModalStore();
   const { setIsOpen: setIsOpenMessagesModal } = messageModalStore();
@@ -23,15 +27,20 @@ const BottomBar = (): JSX.Element => {
   const { setIsOpen: setIsOpenSettingsModal } = settingsModalStore();
 
   const readAllMessagesMutation = useReadAllMessagesMutation();
+  const readAllFilesImagesMutation = useReadAllFilesImagesMutation();
 
   const handleReadAllMessages = async () => {
     await readAllMessagesMutation.mutateAsync();
   };
 
+  const handleReadFilesImages = async () => {
+    await readAllFilesImagesMutation.mutateAsync();
+  };
+
   return (
     <div className="absolute bottom-5 z-20 flex w-full justify-center px-0 md:px-3">
       <div className="flex w-auto flex-row items-center justify-center gap-x-2 overflow-hidden rounded-xl bg-black bg-opacity-20 p-2 backdrop-blur-sm">
-        {isLoadingUser || isLoadingUnreadMessages ? (
+        {isLoadingUser || isLoadingUnreadMessages || isLoadingUnreadFilesImages ? (
           <div className="flex w-full flex-row items-center px-5 py-2">
             <ActivityIndicator className="h-6 w-6" />
           </div>
@@ -127,9 +136,12 @@ const BottomBar = (): JSX.Element => {
                 <button
                   data-tooltip-id="onlyself-tooltip"
                   data-tooltip-content="Files/Images"
-                  className="rounded-xl bg-white bg-opacity-20 p-2 outline-none backdrop-blur-sm transition duration-200 ease-in-out hover:scale-110 hover:bg-opacity-10"
+                  className="relative rounded-xl bg-white bg-opacity-20 p-2 outline-none backdrop-blur-sm transition duration-200 ease-in-out hover:scale-110 hover:bg-opacity-10"
                   type="button"
-                  onClick={() => setIsOpenFilesModal(true)}
+                  onClick={() => {
+                    setIsOpenFilesModal(true);
+                    handleReadFilesImages();
+                  }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -145,6 +157,11 @@ const BottomBar = (): JSX.Element => {
                   >
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                   </svg>
+                  {unreadFilesImages != 0 && (
+                    <p className="absolute -right-1 -top-2 z-10 flex h-5 w-5 flex-row items-center justify-center rounded-full bg-red-500 text-[11px] text-white">
+                      <span>{unreadFilesImages}</span>
+                    </p>
+                  )}
                 </button>
                 <button
                   data-tooltip-id="onlyself-tooltip"
