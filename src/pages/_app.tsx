@@ -6,6 +6,7 @@ import '~/styles/tailwind.css';
 import 'aos/dist/aos.css';
 
 import AOS from 'aos';
+import NProgress from '~/components/organisms/NProgress';
 import { Toaster } from 'react-hot-toast';
 import { Tooltip } from 'react-tooltip';
 import { Poppins } from 'next/font/google';
@@ -42,6 +43,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
         `}
       </style>
       <QueryClientProvider client={queryClient}>
+        <NProgress />
         <Toaster position="top-center" reverseOrder={false} />
         <Component {...pageProps} />
         <Tooltip id="onlyself-tooltip" style={{ zIndex: 9999 }} />
