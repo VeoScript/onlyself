@@ -16,6 +16,29 @@ const Home = (): JSX.Element => {
     <>
       <Head>
         <title>Onlyself</title>
+        <meta name="description" content="Empower Your Online Presence with Onlyself" />
+        <meta name="author" content="Onlyself" />
+        <meta name="keywords" content="Onlyself" />
+        <meta name="viewport" content="width=device-width, initial-scale-1" />
+
+        <meta name="url" property="og:url" content="https://onlyself.vercel.app/" />
+        <meta name="site_name" property="og:site_name" content="Onlyself" />
+        <meta
+          name="description"
+          property="og:description"
+          content="Empower Your Online Presence with Onlyself"
+        />
+        <meta name="secure_url" property="og:secure_url" content="https://i.ibb.co/fpVy9Dc/onlyself.png" />
+        <meta name="image" property="og:image" content="https://i.ibb.co/fpVy9Dc/onlyself.png" />
+        <meta name="type" property="og:image:type" content="png" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="Onlyself" />
+        <meta name="twitter:creator" content="Onlyself" />
+        <meta name="twitter:title" content="Onlyself" />
+        <meta name="twitter:description" content="Empower Your Online Presence with Onlyself" />
+        <meta name="twitter:image" content="https://i.ibb.co/fpVy9Dc/onlyself.png" />
+        <meta name="twitter:domain" content={`https://onlyself.vercel.app/`} />
       </Head>
       <MainLayout user={user} isLoading={isLoadingUser}>
         <div className="flex h-full w-full flex-col items-center justify-center gap-y-8 py-20 md:-mt-20 md:h-screen md:py-0">
