@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -41,7 +41,7 @@ model Message {
   id           String    @id @default(cuid())
   is_read      Boolean   @default(false)
   is_anonymous Boolean
-  content      String
+  content      String    @db.Text
   created_at   DateTime  @default(now())
   updated_at   DateTime?
   sender       User?     @relation("sender", fields: [sender_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
@@ -55,9 +55,9 @@ model FilesImages {
   is_read      Boolean          @default(false)
   is_anonymous Boolean
   type         FilesImagesTypes @default(IMAGE)
-  name         String
-  url          String
-  delete_url   String?
+  name         String           @db.Text
+  url          String           @db.Text
+  delete_url   String?          @db.Text
   created_at   DateTime         @default(now())
   updated_at   DateTime?
   sender       User?            @relation("sender", fields: [sender_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
