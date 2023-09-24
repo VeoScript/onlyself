@@ -63,7 +63,7 @@ const Menu = ({ user, isLoading, isOpenMenu, setIsOpenMenu }: MenuProps): JSX.El
           <Link href="/" className="text-sm text-accent-1 hover:text-accent-1 hover:underline">
             Home
           </Link>
-          <Link href="/" className="text-sm text-accent-1 hover:text-accent-1 hover:underline">
+          <Link href="/pricing" className="text-sm text-accent-1 hover:text-accent-1 hover:underline">
             Pricing
           </Link>
           {user && (
@@ -155,7 +155,7 @@ const MenuMobile = ({ user, isLoading, isOpenMenu }: MenuProps): JSX.Element => 
         Home
       </Link>
       <Link
-        href="/"
+        href="/pricing"
         className="w-full px-5 py-3 text-left text-sm text-accent-1 hover:text-accent-1"
       >
         Pricing

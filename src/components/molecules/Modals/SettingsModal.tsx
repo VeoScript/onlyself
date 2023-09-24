@@ -227,7 +227,13 @@ const SettingsModal = (): JSX.Element => {
         {
           onError: (error) => {
             setIsPendingProfile(false);
-            toast.error(error.response.data.message);
+            if (error.response.data.message === 'username') {
+              toast.error('Username is not available');
+            } else if (error.response.data.message === 'email') {
+              toast.error('Email is not available');
+            } else {
+              toast.error(error.response.data.message);
+            }
           },
           onSuccess: () => {
             setIsPendingProfile(false);
