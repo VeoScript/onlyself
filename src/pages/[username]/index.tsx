@@ -50,6 +50,40 @@ const Profile = (): JSX.Element => {
         <>
           <Head>
             <title>Onlyself | @{profile.username}</title>
+            <meta name="description" content="Empower Your Online Presence with Onlyself" />
+            <meta name="author" content={profile.username} />
+            <meta name="keywords" content={profile.username} />
+            <meta name="viewport" content="width=device-width, initial-scale-1" />
+
+            <meta name="url" property="og:url" content="https://onlyself.vercel.app/" />
+            <meta name="site_name" property="og:site_name" content="Onlyself" />
+            <meta
+              name="description"
+              property="og:description"
+              content="Empower Your Online Presence with Onlyself"
+            />
+            <meta
+              name="secure_url"
+              property="og:secure_url"
+              content={profile.cover_photo}
+            />
+            <meta
+              name="image"
+              property="og:image"
+              content={profile.cover_photo}
+            />
+            <meta name="type" property="og:image:type" content="png" />
+
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:site" content="Onlyself" />
+            <meta name="twitter:creator" content={profile.username} />
+            <meta name="twitter:title" content="Onlyself" />
+            <meta
+              name="twitter:description"
+              content="Empower Your Online Presence with Onlyself"
+            />
+            <meta name="twitter:image" content={profile.cover_photo} />
+            <meta name="twitter:domain" content={`https://onlyself.vercel.app/${profile.username}`} />
           </Head>
           <div className="flex h-full w-full flex-row items-start overflow-hidden bg-white font-poppins selection:bg-blue-300">
             <div className="relative flex h-screen w-full max-w-full flex-col overflow-hidden">
